@@ -1,18 +1,6 @@
-# Flight_Data_Analysis
+# Flight Data Analysis
 
-Airbus FHS est un département qui fournit un service aux compagnies aériennes autour des
-pièces de rechange avion.
-Nous mettons à disposition des stocks de pièces pour assurer la disponibilité de pièces de
-rechange en cas de panne ainsi que la réparation de la pièce déposée.
+We work on “Aircraft component reliability”, which is a vital contributing factor for dispatch reliability and aircraft system reliability. The main purpose of this project is to utilize the statistical models in order to predict if the parts of aircraft will be failure, and then to optimize the stock management.
 
-Airbus FHS propose de communaliser les stocks entre plusieurs clients (compagnies
-aériennes) afin d’optimiser le nombre de pièces nécessaires. Chaque client paye alors un
-prix fixe par mois d’accès à ces stocks ainsi que pour la réparation des pièces déposées.
-Afin de rendre FHS plus compétitifs, nous avons donc les leviers ci-dessous:
-- diminuer les déposes
-- diminuer les coûts de réparation
-- diminuer les investissements (volume des stocks)
-Par conséquent il est de l’intérêt de FHS d’estimer la durée de vie de chacune des pièces
-installées sur avion afin d’anticiper sa dépose (remplacement préventif ou assurer la
-disponibilité d’une pièce de rechange), d’optimiser les stocks (minimiser les investissements
-et anticiper les pics de déposes) et les coûts de réparation.
+We consider two services of Airbus, the airline and the FHS (Flight Hour Services). The Airbus planes are removed and installed the unserviceable and serviceable unit by their site stock. The Airbus FHS plays two important roles here is to provide serviceable units for the site stock and repair product for their customers (the OEMs).
+
