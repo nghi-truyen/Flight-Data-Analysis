@@ -1,5 +1,6 @@
 <img align="left" src="http://www.math.univ-toulouse.fr/~besse/Wikistat/Images/Logo_INSAvilletoulouse-RVB.png">
-<img align="right" width="60" height="40" src="https://github.com/nghitruyen/Flight_Data_Analysis/blob/main/images/logo-AirbusFHS.png">
+<img align="right" width="200" height="150" src="https://github.com/nghitruyen/Flight_Data_Analysis/blob/main/images/logo-AirbusFHS.png">
+
 
 # Flight Data Analysis - Airbus FHS
 
