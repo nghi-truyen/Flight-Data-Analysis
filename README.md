@@ -25,4 +25,3 @@ The challenges is to:
     • reduce investments (stock optimization).
     
 In the new situation due to the pandemic, the airline has less aircraft flying and more contracts ending. Consequently, they need to fine-tune their strategy “repair or stock unserviceable” to optimize the stock management. So the fact of forecasting for the failure of aircraft part is a significant underlying contributing factor for the proposals of such strategy. 
-
