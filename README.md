@@ -13,7 +13,8 @@ We work on “Aircraft component reliability”, which is a vital contributing f
 We consider two services of Airbus, the airline and the FHS (Flight Hour Services). The Airbus planes are removed unserviceable unit if it failures and then are installed serviceable unit that is provided by their site stock. The Airbus FHS here plays two important roles: providing serviceable units for the site stock and repairing product for their customers (the OEMs).
 
 <p align="center">
-  <img src="https://github.com/nghitruyen/Flight_Data_Analysis/blob/main/images/AirbusFHS_activities.png"> | width=50
+  <img src="https://github.com/nghitruyen/Flight_Data_Analysis/blob/main/images/AirbusFHS_activities.png">
+  ![](https://github.com/nghitruyen/Flight_Data_Analysis/blob/main/images/AirbusFHS_activities.png | width=100)
 </p>
 
 The challenges is to:
