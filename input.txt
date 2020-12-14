@@ -1,17 +1,17 @@
 - Data file name (must be STRING and finished by .xlsx:
 Dataset_ter.xlsx
-
+*******************************
 - Confidence level (must be in (0,1)):
 0.95
-
+*******************************
 - Company name (must be INTEGER):
 5
-
+*******************************
 - Unit type (must be STRING):
 A
-
+*******************************
 - Month (must be INTEGER):
 12
-
+*******************************
 - Year (must be INTEGER):
 2022
