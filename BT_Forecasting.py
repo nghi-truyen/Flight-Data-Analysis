@@ -54,31 +54,38 @@ def preprocessing(file_location):
 
 # Combining Removals and SNlist :
     fail_and_not = SNlist.copy()
+    fail_and_not['On_Aircraft'] = False
+    onaircraft_fan = fail_and_not['On_Aircraft']
+    onaircraft_fan[fail_and_not['Current SN Status Description']=='On Aircraft']=True
+    fail_and_not['On_Aircraft'] = onaircraft_fan
     fail_and_not['failed'] = False
-    fail_and_not[fail_and_not['Current SN Status Description']=='In Outside Repair']=True
+    failed_fan = fail_and_not['failed']
+    failed_fan[fail_and_not['Current SN Status Description']=='In Outside Repair']=True
+    fail_and_not['failed'] = failed_fan
     fail_and_not = fail_and_not.drop(['Description','Current SN Status Description','Since New Date'], axis = 1)
     fail_and_not = fail_and_not.rename(columns={"Part Number": "PN", "Serial Number": "SN", "Hour ageing Since Installation": "TSI", "Hour ageing Since New": "TSN"})
 
-    fail = Removals[Removals['Maintenance Type']=='Unscheduled']
+    fail = Removals.copy()
+    fail['On_Aircraft'] = False
+    fail['failed'] = True
+    failed_f = fail['failed']
+    failed_f[fail['Maintenance Type']=='Scheduled'] = False
+    fail['failed'] = failed_f
     fail = fail.drop(['Removal date','Description','Maintenance Type'], axis=1)
     fail = fail.rename(columns={"P/N": "PN", "S/N": "SN", "TSI (Flight Hours) at removal": "TSI", "TSN (Flight Hours) at Removal": "TSN", "Customer":"Company"})
-    fail['failed'] = True
 
     all_SN = pd.unique(fail_and_not['SN'])
     SN_Removals = pd.unique(fail['SN'])
 
     combined = pd.concat([fail,fail_and_not], ignore_index=True)
     combined = combined.drop_duplicates(subset=['SN','PN','TSN'], keep='last')
-    
+
     # Data errors treatment
-    combined['TSI']=combined['TSI'].replace(True, 0.0)
-    combined['TSN']=combined['TSN'].replace(True, 0.0)
     combined['TSI']=combined['TSI'].replace(np.nan, 0.0)
     combined['TSN']=combined['TSN'].replace(np.nan, 0.0)
     combined['Company']=combined['Company'].replace('1', 1)
     combined['Company']=combined['Company'].replace('3', 3)
     combined = combined[combined['TSN']!=0]
-    
     return combined, airlines
 
 def time_sticker(data_type): 
@@ -90,7 +97,9 @@ try:
     print("==========================================")
     print("	DATA PREPROCESSING ...  	     ")
     print("==========================================")  
-    combined, airlines = preprocessing(file_location)
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore")
+        combined, airlines = preprocessing(file_location)
     print("==========================================")
     print("	DATA PREPROCESSING FINISHED!	     ")
     print("==========================================") 
@@ -200,8 +209,8 @@ def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=
 
     dat = df[df.Company==company]
     dat = dat[dat.PN==typ]
+    dat = dat[dat.On_Aircraft==True]
     total = len(dat.TSI)
-    num_not_failed = total-sum(dat.failed)
   
     list_TSI = dat[dat.failed==False].TSI.to_numpy()
 #    list_TSI = np.concatenate((list_TSI, np.zeros(sum(dat.failed))), axis=0)
@@ -215,7 +224,7 @@ def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=
     stock = stock/MC  
     # CI
     ci1,ci2=CI(y)
-    return stock,y,ci1,ci2,(num_not_failed,total)
+    return stock,y,ci1,ci2,total
  
 #####################################
 ## 	MAIN PROCESSING		   ##
@@ -243,7 +252,7 @@ def BT_Forecasting():
         ts = time.time()
         s,y,ci1,ci2,t = Estimated_Stock(company,unit_type,year,month)
         te = time.time()
-        print("There are %d/%d units that is not failed at the moment."%(t[0],t[1]))
+        print("There are %d units which is actually on aircraft."%t)
         print("Predicting a number of unit in average for stock: ",s)
         print("with confidence interval (%0.2f,%0.2f) and confidence interval in average (%0.2f,%0.2f) at level %0.2f"%(ci1[0],ci1[1],ci2[0],ci2[1],100-100*alpha), end="")
         print("%.")
