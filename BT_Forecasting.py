@@ -10,19 +10,40 @@ from lifelines.utils import find_best_parametric_model
 import datetime as dt
 import time
 
-# Import input.txt file:
-fname = open("input.txt","r")
-input_ = fname.readlines()
-fname.close()
+##############################################
+##	INPUT PARAMETERS CALIBRATION        ##
+##############################################
 
-# Set up parameters
-alpha = 1-round(float(input_[4]),2) # related by confidence level
-file_name = str(input_[1][:-1].replace(" ", ""))
-file_location = "./"+file_name
-company = int(input_[7])         # must be in INTEGER
-unit_type = str(input_[10][:-1].replace(" ", "")) # STRING
-year = int(input_[16])         # INTEGER
-month = int(input_[13])           # INTEGER
+import_by_txt_file = True
+
+if import_by_txt_file:
+    # Import input.txt file:
+    fname = open("input.txt","r")
+    input_ = fname.readlines()
+    fname.close()
+    # Set up parameters
+    alpha = 1-round(float(input_[4]),2) # related by confidence level
+    file_name = str(input_[1][:-1].replace(" ", ""))
+    file_location = "./"+file_name
+    company = int(input_[7])         # must be in INTEGER
+    unit_type = str(input_[10][:-1].replace(" ", "")) # STRING
+    year = int(input_[16])         # INTEGER
+    month = int(input_[13])           # INTEGER
+else:
+    confidence_level = 0.95    # TO CALIBRATE (must be in (0,1))
+    alpha = 1-confidence_level
+    
+    file_name = "Dataset_ter.xlsx" # TO CALIBRATE (must be STRING and finished by .xlsx)
+    file_location = "./"+file_name
+    
+    company = 5         # TO CALIBRATE (must be in INTEGER)
+    unit_type = 'A' # TO CALIBRATE (STRING)
+    year = 2022         # TO CALIBRATE (INTEGER)
+    month = 12           # TO CALIBRATE (INTEGER)
+
+###############################################
+##					     ##
+###############################################
 
 # Data preprocessing
 def preprocessing(file_location):
@@ -37,14 +58,11 @@ def preprocessing(file_location):
     fail_and_not[fail_and_not['Current SN Status Description']=='In Outside Repair']=True
     fail_and_not = fail_and_not.drop(['Description','Current SN Status Description','Since New Date'], axis = 1)
     fail_and_not = fail_and_not.rename(columns={"Part Number": "PN", "Serial Number": "SN", "Hour ageing Since Installation": "TSI", "Hour ageing Since New": "TSN"})
-    dic_PN = {"C":"C","C-new":"C-new","A":"A","B":"B"}
-    fail_and_not["PN"] = fail_and_not.PN.map(dic_PN)
 
     fail = Removals[Removals['Maintenance Type']=='Unscheduled']
     fail = fail.drop(['Removal date','Description','Maintenance Type'], axis=1)
     fail = fail.rename(columns={"P/N": "PN", "S/N": "SN", "TSI (Flight Hours) at removal": "TSI", "TSN (Flight Hours) at Removal": "TSN", "Customer":"Company"})
     fail['failed'] = True
-    fail['PN'] = fail.PN.map(dic_PN)
 
     all_SN = pd.unique(fail_and_not['SN'])
     SN_Removals = pd.unique(fail['SN'])
@@ -53,6 +71,8 @@ def preprocessing(file_location):
     combined = combined.drop_duplicates(subset=['SN','PN','TSN'], keep='last')
     
     # Data errors treatment
+    combined['TSI']=combined['TSI'].replace(True, 0.0)
+    combined['TSN']=combined['TSN'].replace(True, 0.0)
     combined['TSI']=combined['TSI'].replace(np.nan, 0.0)
     combined['TSN']=combined['TSN'].replace(np.nan, 0.0)
     combined['Company']=combined['Company'].replace('1', 1)
@@ -197,8 +217,8 @@ def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=
     ci1,ci2=CI(y)
     return stock,y,ci1,ci2,(num_not_failed,total)
  
-####################################
-# main processing
+#####################################
+## 	MAIN PROCESSING		   ##
 #####################################
 
 def BT_Forecasting():
@@ -227,9 +247,9 @@ def BT_Forecasting():
         print("Predicting a number of unit in average for stock: ",s)
         print("with confidence interval (%0.2f,%0.2f) and confidence interval in average (%0.2f,%0.2f) at level %0.2f"%(ci1[0],ci1[1],ci2[0],ci2[1],100-100*alpha), end="")
         print("%.")
-        print("Simulation time : ", te-ts)
+        print("Simulation time (by second): ", te-ts)
         print("==========================================")
-        print("	SIMULATION PROCESS FINISHED!	  	     ")
+        print("	SIMULATION PROCESS FINISHED!	  	 ")
         print("==========================================")
     
 # To run tests without pytest (debug)

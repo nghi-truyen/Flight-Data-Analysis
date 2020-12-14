@@ -1,4 +1,4 @@
-- Data file name (must be STRING and finished by .xlsx:
+- Data file name (must be STRING and finished by .xlsx), we note that it is not required to add spaces between the character of file name!
 Dataset_ter.xlsx
 *******************************
 - Confidence level (must be in (0,1)):
