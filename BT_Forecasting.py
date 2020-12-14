@@ -24,7 +24,7 @@ if import_by_txt_file:
     # Set up parameters
     alpha = 1-round(float(input_[4]),2) # related by confidence level
     file_name = str(input_[1][:-1].replace(" ", ""))
-    file_location = "./"+file_name
+    file_location = "./DataSet/"+file_name
     company = int(input_[7])         # must be in INTEGER
     unit_type = str(input_[10][:-1].replace(" ", "")) # STRING
     year = int(input_[16])         # INTEGER
@@ -34,7 +34,7 @@ else:
     alpha = 1-confidence_level
     
     file_name = "Dataset_ter.xlsx" # TO CALIBRATE (must be STRING and finished by .xlsx)
-    file_location = "./"+file_name
+    file_location = "./DataSet/"+file_name
     
     company = 5         # TO CALIBRATE (must be in INTEGER)
     unit_type = 'A' # TO CALIBRATE (STRING)
