@@ -47,20 +47,24 @@ else:
 
 # Data preprocessing
 def preprocessing(file_location):
-# Import data
+    # Import data
     Removals = pd.read_excel(file_location, sheet_name='Removals')
     SNlist = pd.read_excel(file_location, sheet_name='SN list')
     airlines = pd.read_excel(file_location, sheet_name='Airlines')
 
-# Combining Removals and SNlist :
+    # Combining Removals and SNlist :
     fail_and_not = SNlist.copy()
     fail_and_not['On_Aircraft'] = False
     onaircraft_fan = fail_and_not['On_Aircraft']
-    onaircraft_fan[fail_and_not['Current SN Status Description']=='On Aircraft']=True
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore")
+        onaircraft_fan[fail_and_not['Current SN Status Description']=='On Aircraft']=True
     fail_and_not['On_Aircraft'] = onaircraft_fan
     fail_and_not['failed'] = False
     failed_fan = fail_and_not['failed']
-    failed_fan[fail_and_not['Current SN Status Description']=='In Outside Repair']=True
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore")
+        failed_fan[fail_and_not['Current SN Status Description']=='In Outside Repair']=True
     fail_and_not['failed'] = failed_fan
     fail_and_not = fail_and_not.drop(['Description','Current SN Status Description','Since New Date'], axis = 1)
     fail_and_not = fail_and_not.rename(columns={"Part Number": "PN", "Serial Number": "SN", "Hour ageing Since Installation": "TSI", "Hour ageing Since New": "TSN"})
@@ -69,7 +73,9 @@ def preprocessing(file_location):
     fail['On_Aircraft'] = False
     fail['failed'] = True
     failed_f = fail['failed']
-    failed_f[fail['Maintenance Type']=='Scheduled'] = False
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore")
+        failed_f[fail['Maintenance Type']=='Scheduled'] = False
     fail['failed'] = failed_f
     fail = fail.drop(['Removal date','Description','Maintenance Type'], axis=1)
     fail = fail.rename(columns={"P/N": "PN", "S/N": "SN", "TSI (Flight Hours) at removal": "TSI", "TSN (Flight Hours) at Removal": "TSN", "Customer":"Company"})
@@ -97,9 +103,7 @@ try:
     print("==========================================")
     print("	DATA PREPROCESSING ...  	     ")
     print("==========================================")  
-    with warnings.catch_warnings():
-        warnings.filterwarnings("ignore")
-        combined, airlines = preprocessing(file_location)
+    combined, airlines = preprocessing(file_location)
     print("==========================================")
     print("	DATA PREPROCESSING FINISHED!	     ")
     print("==========================================") 
