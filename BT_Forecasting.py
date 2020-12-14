@@ -66,8 +66,14 @@ def time_sticker(data_type):
     d = np.array([1 if f == True else 0 for f in data_type.failed])
     return T,d
 
-try:   
+try: 
+    print("==========================================")
+    print("	DATA PREPROCESSING ...  	     ")
+    print("==========================================")  
     combined, airlines = preprocessing(file_location)
+    print("==========================================")
+    print("	DATA PREPROCESSING FINISHED!	     ")
+    print("==========================================") 
 except FileNotFoundError:
     print("Data file does not exist!")
     exit(1)
