@@ -30,6 +30,7 @@ if import_by_txt_file:
     unit_type = str(input_[10][:-1].replace(" ", "")) # STRING
     year = int(input_[16])         # INTEGER
     month = int(input_[13])           # INTEGER
+    number_in_stock = input_[19] # (INTEGER): useful for "Time_Forecasting()" function 
 else:
     confidence_level = 0.95    # TO CALIBRATE (must be in (0,1))
     alpha = 1-confidence_level
@@ -42,6 +43,8 @@ else:
     unit_type = 'A' # TO CALIBRATE (STRING)
     year = 2022         # TO CALIBRATE (INTEGER)
     month = 12           # TO CALIBRATE (INTEGER)
+    
+    number_in_stock = 60 # (INTEGER): useful for "Time_Forecasting()" function 
 
 ###############################################
 ##					     ##
