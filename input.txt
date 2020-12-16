@@ -1,17 +1,17 @@
 - Data file name (must be STRING and finished by .xlsx), we note that it is not required to add spaces between the character of file name!
-Dataset_ter.xlsx
+INSA-AirbusFHS-DatasetPN_D-E-F.xlsx
 *******************************
 - Confidence level (must be in (0,1)):
 0.95
 *******************************
-- Company name (must be INTEGER):
-5
+- Company name (must be INTEGER) !!! If company==0 so we want to forecast for ALL COMPANIES.
+0
 *******************************
 - Unit type (must be STRING):
-A
+D
 *******************************
 - Month (must be INTEGER):
 12
 *******************************
 - Year (must be INTEGER):
-2022
+2030
