@@ -30,7 +30,7 @@ if import_by_txt_file:
     unit_type = str(input_[10][:-1].replace(" ", "")) # STRING
     year = int(input_[16])         # INTEGER
     month = int(input_[13])           # INTEGER
-    number_in_stock = input_[19] # (INTEGER): useful for "Time_Forecasting()" function 
+    number_in_stock = int(input_[19]) # (INTEGER): useful for "Time_Forecasting()" function 
 else:
     confidence_level = 0.95    # TO CALIBRATE (must be in (0,1))
     alpha = 1-confidence_level
@@ -268,9 +268,12 @@ def Time_series(typ,month,year,df=data,df_types=data_types,airlines=airlines,Beg
 
 def Estimated_time(typ,P,month,year,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200):
     x,y=Time_series(typ,month,year,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
-    arg = np.argmin(y<=P)-1
-    duration = x[arg]+(x[arg+1]-x[arg])*(y[arg]-P)/(y[arg]-y[arg+1])
-    mois=int(duration)%12+(int(duration)%12==0)*12
-    annee = int((duration-mois)/12)
-    return dt.datetime(annee,mois,1)
-
+    if P>=np.max(y):
+        pred_time = 0
+    else:
+        arg = np.argmin(y<=P)-1
+        duration = x[arg]+(x[arg+1]-x[arg])*(y[arg]-P)/(y[arg]-y[arg+1])
+        mois=int(duration)%12+(int(duration)%12==0)*12
+        annee = int((duration-mois)/12)
+        pred_time = dt.datetime(annee,mois,1)
+    return pred_time
