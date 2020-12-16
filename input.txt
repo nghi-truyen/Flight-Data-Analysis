@@ -5,13 +5,16 @@ INSA-AirbusFHS-DatasetPN_D-E-F.xlsx
 0.95
 *******************************
 - Company name (must be INTEGER) !!! If company==0 so we want to forecast for ALL COMPANIES.
-0
+1
 *******************************
 - Unit type (must be STRING):
-D
+E
 *******************************
 - Month (must be INTEGER):
 12
 *******************************
 - Year (must be INTEGER):
-2030
+2023
+- Number of type unit actually in stock (INTEGER): # useful for "Time_Forecasting()" function 
+*******************************
+60

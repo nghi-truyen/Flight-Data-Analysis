@@ -14,7 +14,7 @@ import time
 ##	INPUT PARAMETERS CALIBRATION        ##
 ##############################################
 
-import_by_txt_file = True
+import_by_txt_file = True 	# TRUE IF WE WANT TO IMPORT INPUT PARAMETERS BY .TXT FILE.
 
 if import_by_txt_file:
     # Import input.txt file:
@@ -232,20 +232,42 @@ def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=
     ci1,ci2=CI(y)
     return stock,y,ci1,ci2,total
     
-def Estimated_Stock_All_Companies(typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200):
+def Estimated_Stock_All_Companies(typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,message=False):
     s,y,ci1,ci2,t = 0,np.zeros(MC),np.zeros(2),np.zeros(2),0
     for company in list_company:
         mm,yyyy=airlines['End of contract'][company-1].month,airlines['End of contract'][company-1].year
         if mm+yyyy*12<month+year*12:
-            s_,y_,ci1_,ci2_,t_ = Estimated_Stock(company,unit_type,yyyy,mm)
-            print('The contract of company %d will end before %d/%d (in %d/%d)'%(company,month,year,mm,yyyy))
+            s_,y_,ci1_,ci2_,t_ = Estimated_Stock(company,unit_type,yyyy,mm,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
+            if message:
+                print('The contract of company %d will end before %d/%d (in %d/%d)'%(company,month,year,mm,yyyy))
         else:
-            s_,y_,ci1_,ci2_,t_ = Estimated_Stock(company,unit_type,year,month)
+            s_,y_,ci1_,ci2_,t_ = Estimated_Stock(company,unit_type,year,month,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
         s += s_
         y += y_
         ci1 += np.array(ci1_)
         ci2 += np.array(ci2_)
         t += t_
     return s,y,ci1,ci2,t
+    
+def Time_series(typ,month,year,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200):
+    start = Begin.month+Begin.year*12
+    end = month+year*12
+    if end<=start:
+        print("Start time must be less than end time!")
+        exit()
+    else:
+        points = np.linspace(start,end,end-start+1)
+        s = np.zeros(len(points))
+        for i in range(len(points)):
+            mois=int(points[i])%12+(int(points[i])%12==0)*12
+            s[i] = Estimated_Stock_All_Companies(typ,int((points[i]-mois)/12),mois,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)[0]
+    return points,s
 
+def Estimated_time(typ,P,month,year,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200):
+    x,y=Time_series(typ,month,year,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
+    arg = np.argmin(y<=P)-1
+    duration = x[arg]+(x[arg+1]-x[arg])*(y[arg]-P)/(y[arg]-y[arg+1])
+    mois=int(duration)%12+(int(duration)%12==0)*12
+    annee = int((duration-mois)/12)
+    return dt.datetime(annee,mois,1)
 
