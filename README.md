@@ -20,13 +20,13 @@ We consider two services of Airbus, the airline and the FHS (Flight Hour Service
 
 The challenges is to:
 
-    - reduce removals of parts,
+- reduce removals of parts,
     
-    - reduce repair costs and,
+- reduce repair costs and,
     
-    - reduce investments (stock optimization).
+- reduce investments (stock optimization).
     
-In the new situation due to the pandemic, the airline has less aircraft flying and more contracts ending. Consequently, they need to fine-tune their strategy “repair or stock unserviceable” to optimize the stock management. So the fact of forecasting for the failure of aircraft part is a significant underlying contributing factor for the proposals of such strategy. 
+In the situation due to the pandemic, the airline has less aircraft flying and more contracts ending. Consequently, they need to fine-tune their strategy “repair or stock unserviceable” to optimize the stock management. So the fact of forecasting for the failure of aircraft part is a significant underlying contributing factor for the proposals of such strategy. 
 
 ### Tutorial:
 
