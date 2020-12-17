@@ -52,7 +52,7 @@ The `input.txt` file is to calibrate the parameters of simulation:
 
 - `<Number of type unit actually in stock>`: useful for `Time_Forecasting()` function, which predict the moment that we can not afford the need of customers.
 
-For estimating the number of failures at a determined time in the futur, we run `Number_Failures_Forecasting.py` file with the command:
+For estimating the number of failures at a determined time in the future, we run `Number_Failures_Forecasting.py` file with the command:
 
 `$ python Number_Failures_Forecasting.py`
 
