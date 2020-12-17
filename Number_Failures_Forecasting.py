@@ -42,7 +42,7 @@ def Number_Failures_Forecasting():
     print("==========================================")
     print("	SIMULATION PROCESS FINISHED!	  	 ")
     print("==========================================")
-    if DefFunc!=0:
+    if DefFunc.company!=0:
         print("Forecast for type %s unit of company %d from %d/%d until %d/%d:"%(DefFunc.unit_type,DefFunc.company,DefFunc.Today.month,DefFunc.Today.year,DefFunc.month,DefFunc.year))
     else:
         print("Forecast for type %s unit from %d/%d until %d/%d:"%(DefFunc.unit_type,DefFunc.Today.month,DefFunc.Today.year,DefFunc.month,DefFunc.year))

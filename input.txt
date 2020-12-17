@@ -17,4 +17,4 @@ D
 2021
 - Number of type unit actually in stock (INTEGER): # useful for "Time_Forecasting()" function 
 *******************************
-30
+20
