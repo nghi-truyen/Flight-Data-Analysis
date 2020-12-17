@@ -38,7 +38,7 @@ Then, the lifelines library in Python is required to execute the codes of projec
 
 $ pip install lifelines
 
-The notebook file include all of codes for the simulation process as well as the graphs to visualize.
+The notebook file includes all of codes for the simulation process as well as the graphs to visualize.
 
 The input.txt file is to calibrate the parameters of simulation:
 
