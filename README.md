@@ -32,30 +32,30 @@ In the new situation due to the pandemic, the airline has less aircraft flying a
 
 We first download the project by the command below:
 
-`<addr>` $ git clone https://github.com/nghitruyen/Flight_Data_Analysis
+`<$ git clone https://github.com/nghitruyen/Flight_Data_Analysis>`
 
-Then, the lifelines library in Python is required to execute the codes of project:
+Then, the `<lifelines>` library in Python is required to execute the codes of project:
 
-$ pip install lifelines
+`<$ pip install lifelines>`
 
 The notebook file includes all of codes for the simulation process as well as the graphs to visualize.
 
-The input.txt file is to calibrate the parameters of simulation:
+The `<input.txt>` file is to calibrate the parameters of simulation:
 
-- Data file name: name of data file which must be string.
+- `<Data file name>`: name of data file which must be string.
 
-- Confidence level: confidence level coefficient which must be in (0,1).
+- `<Confidence level>`: confidence level coefficient which must be in (0,1).
 
-- Company name: company that we want to forecast, if company==0 so we want to forecast for all companies.
+- `<Company name>`: company that we want to forecast, if `<company==0>` so we want to forecast for all companies.
 
-- Month and Year: the moment that we want to forecast in the future.
+- `<Month>` and `<Year>`: the moment that we want to forecast in the future.
 
-- Number of type unit actually in stock: useful for "Time_Forecasting()" function, which predict the moment that we can not afford the need of customers.
+- `<Number of type unit actually in stock>`: useful for `<Time_Forecasting()>` function, which predict the moment that we can not afford the need of customers.
 
-For estimating the number of failures at a determined time in the futur, we run Number_Failures_Forecasting.py file with the command:
+For estimating the number of failures at a determined time in the futur, we run `<Number_Failures_Forecasting.py>` file with the command:
 
-$ python Number_Failures_Forecasting.py
+`<$ python Number_Failures_Forecasting.py>`
 
-For estimating the time that we can afford the need of customers, we run Time_Forecasting.py file:
+For estimating the time that we can afford the need of customers, we run `<Time_Forecasting.py>` file:
 
-$ python Time_Forecasting.py
+`<$ python Time_Forecasting.py>`
