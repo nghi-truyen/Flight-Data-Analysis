@@ -8,6 +8,8 @@
 
 ## *Forecast of aircraft parts failures and optimization of spare parts stock management*
 
+### Introduction:
+
 We work on “Aircraft component reliability”, which is a vital contributing factor for dispatch reliability and aircraft system reliability. The main purpose of this project is to utilize the statistical models in order to predict if the parts of aircraft will be failure, and then to optimize the stock management.
 
 We consider two services of Airbus, the airline and the FHS (Flight Hour Services). The Airbus planes are removed unserviceable unit if it failures and then are installed serviceable unit that is provided by their site stock. The Airbus FHS here plays two important roles: providing serviceable units for the site stock and repairing product for their customers (the OEMs).
@@ -25,3 +27,21 @@ The challenges is to:
     • reduce investments (stock optimization).
     
 In the new situation due to the pandemic, the airline has less aircraft flying and more contracts ending. Consequently, they need to fine-tune their strategy “repair or stock unserviceable” to optimize the stock management. So the fact of forecasting for the failure of aircraft part is a significant underlying contributing factor for the proposals of such strategy. 
+
+### Tutorial:
+
+We first download the project by the command below:
+$ git clone https://github.com/nghitruyen/Flight_Data_Analysis
+Then, the lifelines library in Python is required to execute the codes of project:
+$ pip install lifelines
+The notebook file include all of codes for the simulation process as well as the graphs to visualize.
+The input.txt file is to calibrate the parameters of simulation:
+- Data file name: name of data file which must be string.
+- Confidence level: confidence level coefficient which must be in (0,1).
+- Company name: company that we want to forecast, if company==0 so we want to forecast for all companies.
+- Month and Year: the moment that we want to forecast in the future.
+- Number of type unit actually in stock: useful for "Time_Forecasting()" function, which predict the moment that we can not afford the need of customers.
+For estimating the number of failures at a determined time in the futur, we run Number_Failures_Forecasting.py file with the command:
+$ python Number_Failures_Forecasting.py
+For estimating the time that we can afford the need of customers, we run Time_Forecasting.py file:
+$ python Time_Forecasting.py
