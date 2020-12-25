@@ -40,7 +40,7 @@ Then, the `lifelines` library in Python is required to execute the codes of proj
 
 The notebook file includes all of codes for the simulation process as well as the graphs to visualize.
 
-The `input.txt` file is to calibrate the parameters of simulation:
+The `input.txt` file is to calibrate the parameters of simulations:
 
 - `<Data xfile name>`: name of data file which must be string.
 
@@ -50,7 +50,7 @@ The `input.txt` file is to calibrate the parameters of simulation:
 
 - `<Month>` and `<Year>`: the moment that we want to forecast in the future.
 
-- `<Number of type unit actually in stock>`: useful for `Time_Forecasting()` function, which predict the moment that we can not afford the need of customers.
+- `<Number of type unit actually in stock>`: useful for `Time_Forecasting()` function, which predicts the moment that we can not afford the need of customers.
 
 For estimating of the number of failures at a determined time in the future, we run `Number_Failures_Forecasting.py` file with the command:
 
