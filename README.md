@@ -30,11 +30,7 @@ In the situation due to the pandemic, the airline has less aircraft flying and m
 
 ### Tutorial:
 
-We first download the project by the command below:
-
-`$ git clone https://github.com/nghitruyen/Flight_Data_Analysis.git`
-
-Then, the `lifelines` library in Python is required to execute the codes of project:
+We first download the project and then, the `lifelines` library in Python is required to execute the codes of project:
 
 `$ pip install lifelines`
 
