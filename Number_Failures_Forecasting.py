@@ -48,7 +48,7 @@ def Number_Failures_Forecasting():
         print("Forecast for type %s unit from %d/%d until %d/%d:"%(DefFunc.unit_type,DefFunc.Today.month,DefFunc.Today.year,DefFunc.month,DefFunc.year))
     print("There are %d units which is actually on aircraft."%t)
     print("Predicting a number of unit in average for stock: ",s)
-    print("with confidence interval (%0.2f,%0.2f) and confidence interval in average (%0.2f,%0.2f) at level %0.2f"%(ci1[0],ci1[1],ci2[0],ci2[1],100-100*DefFunc.alpha), end="")
+    print("with Empirical Confidence Interval (%0.2f,%0.2f) and CLT Confidence Interval (%0.2f,%0.2f) at level %0.2f"%(ci1[0],ci1[1],ci2[0],ci2[1],100-100*DefFunc.alpha), end="")
     print("%.")
     print("Simulation time (by second): ", te-ts)
     

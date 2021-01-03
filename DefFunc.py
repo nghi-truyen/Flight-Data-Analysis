@@ -30,7 +30,8 @@ if import_by_txt_file:
     unit_type = str(input_[10][:-1].replace(" ", "")) # STRING
     year = int(input_[16])         # INTEGER
     month = int(input_[13])           # INTEGER
-    number_in_stock = int(input_[19]) # (INTEGER): useful for "Time_Forecasting()" function 
+    number_in_stock = int(input_[19]) # (INTEGER): only useful for "Time_Forecasting()" function 
+    service_level = float(input_[22]) # must be in (0,1): only useful for "Time_Forecasting()" function
 else:
     confidence_level = 0.95    # TO CALIBRATE (must be in (0,1))
     alpha = 1-confidence_level
@@ -43,8 +44,8 @@ else:
     unit_type = 'A' # TO CALIBRATE (STRING)
     year = 2022         # TO CALIBRATE (INTEGER)
     month = 12           # TO CALIBRATE (INTEGER)
-    
-    number_in_stock = 60 # (INTEGER): useful for "Time_Forecasting()" function 
+    number_in_stock = 60 # TO CALIBRATE (INTEGER): only useful for "Time_Forecasting()" function
+    service_level = 0.9 # TO CALIBRATE (must be in (0,1)): only useful for "Time_Forecasting()" function
 
 ###############################################
 ##					     ##
@@ -266,7 +267,8 @@ def Time_series(typ,month,year,df=data,df_types=data_types,airlines=airlines,Beg
             s[i] = Estimated_Stock_All_Companies(typ,int((points[i]-mois)/12),mois,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)[0]
     return points,s
 
-def Estimated_time(typ,P,month,year,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200):
+def Estimated_time(typ,N,month,year,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,tau=service_level):
+    P = N/tau
     x,y=Time_series(typ,month,year,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
     if P>=np.max(y):
         pred_time = 0

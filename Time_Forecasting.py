@@ -31,9 +31,13 @@ def Time_Forecasting():
         print("	SIMULATION PROCESS FINISHED!	  	 ")
         print("==========================================")
         if predicted_time ==0:
-            print("The number of product actually in stock is %d, which can afford the need of customers."%DefFunc.number_in_stock)
+            print("The number of product of type %s actually in stock is %d, which can afford %0.2f"%(DefFunc.unit_type,DefFunc.number_in_stock,100*DefFunc.service_level),end="")
+            print("%",end="")
+            print(" the need of customers until %d/%d"%(DefFunc.month,DefFunc.year))
         else:
-            print("The number of product actually in stock is ",DefFunc.number_in_stock,", which can afford the need until ",predicted_time,".")
+            print("The number of product of type %s actually in stock is %d, which can only afford %0.2f"%(DefFunc.unit_type,DefFunc.number_in_stock,100*DefFunc.service_level),end="")
+            print("%",end="")
+            print(" the need of customers until %d/%d"%(predicted_time.month,predicted_time.year))
         print("Simulation time (by second): ", te-ts)
     
 # To run tests without pytest (debug)
