@@ -16,8 +16,8 @@ D
 - Year (must be INTEGER):
 2021
 *******************************
-- Number of type unit actually in stock (INTEGER): # only useful for "Time_Forecasting()" function 
+- Number of type unit actually in stock (INTEGER): only useful for "Time_Forecasting()" function 
 20
 *******************************
-- Service level (must be in (0,1)): # only useful for "Time_Forecasting()" function
+- Service level (must be in (0,1)): only useful for "Time_Forecasting()" function
 0.9
