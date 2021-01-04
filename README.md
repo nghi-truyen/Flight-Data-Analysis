@@ -56,6 +56,6 @@ For estimating of the number of failures at a determined time in the future, we 
 
 `$ python Number_Failures_Forecasting.py`
 
-For estimating of the moment that we can afford the need of customers, we run `Time_Forecasting.py` file:
+For estimating of the moment that we can not afford the need of customers, we run `Time_Forecasting.py` file:
 
 `$ python Time_Forecasting.py`
