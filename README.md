@@ -38,7 +38,7 @@ The notebook file includes all of codes for the simulation process as well as th
 
 The `input.txt` file is to calibrate the parameters of simulations:
 
-- `<Data xfile name>`: name of data file which must be string.
+- `<Data file name>`: name of data file which must be string.
 
 - `<Confidence level>`: confidence level coefficient which must be in (0,1).
 
@@ -46,14 +46,14 @@ The `input.txt` file is to calibrate the parameters of simulations:
 
 - `<Month>` and `<Year>`: the moment that we want to forecast in the future.
 
-- `<Number of type unit actually in stock>`: only useful for `Time_Forecasting()` function, which predicts the moment that we can not afford the need of customers.
+- `<Number of type unit actually in stock>`: number of product available on stock at the moment. This only useful for `Time_Forecasting()` function. 
 
-- `<Service level>`: only useful for `Time_Forecasting()` function.
+- `<Service level>`: level for that we can afford the need of customers. Only useful for `Time_Forecasting()` function.
 
 For estimating of the number of failures at a determined time in the future, we run `Number_Failures_Forecasting.py` file with the command:
 
 `$ python Number_Failures_Forecasting.py`
 
-For estimating of the time that we can afford the need of customers, we run `Time_Forecasting.py` file:
+For estimating of the moment that we can afford the need of customers, we run `Time_Forecasting.py` file:
 
 `$ python Time_Forecasting.py`
