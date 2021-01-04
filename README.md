@@ -50,7 +50,7 @@ The `input.txt` file is to calibrate the parameters of simulations:
 
 - `<Number of type unit actually in stock>`: number of product of type `<Unit type>` available on stock at the moment. This only useful for `Time_Forecasting()` function. 
 
-- `<Service level>`: level for that we can afford the need of customers. Only useful for `Time_Forecasting()` function.
+- `<Service level>`: percentage to which customers's need shoud be met. Only useful for `Time_Forecasting()` function.
 
 For estimating of the number of failures at a determined time in the future, we run `Number_Failures_Forecasting.py` file with the command:
 
