@@ -42,7 +42,7 @@ The `input.txt` file is to calibrate the parameters of simulations:
 
 - `<Confidence level>`: confidence level coefficient which must be in (0,1).
 
-- `<Company name>`: company that we want to forecast, if `company==0` so we want to forecast for all companies.
+- `<Company name>`: company that we want to forecast, if `company==0` so we want to forecast for all companies. This parameter is only useful for `Number_Failures_Forecasting()` function. 
 
 - `<Month>` and `<Year>`: the moment that we want to forecast in the future.
 
