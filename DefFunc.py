@@ -25,7 +25,7 @@ if import_by_txt_file:
     alpha = 1-round(float(input_[4]),2) # related by confidence level
     file_name = str(input_[1][:-1].replace(" ", ""))
     file_location = "./DataSet/"+file_name
-    company = int(input_[7])         # must be in INTEGER
+    company = int(input_[7])         # must be in INTEGER: only useful for Number_Failures_Forecasting function
     # If company==0 so we want to forecast for ALL COMPANIES
     unit_type = str(input_[10][:-1].replace(" ", "")) # STRING
     year = int(input_[16])         # INTEGER
@@ -39,7 +39,7 @@ else:
     file_name = "Dataset_ter.xlsx" # TO CALIBRATE (must be STRING and finished by .xlsx)
     file_location = "./DataSet/"+file_name
     
-    company = 5         # TO CALIBRATE (must be in INTEGER)
+    company = 5         # TO CALIBRATE (must be in INTEGER): only useful for "Number_Failures_Forecasting()" function
     # !!! If company==0 so we want to forecast for ALL COMPANIES
     unit_type = 'A' # TO CALIBRATE (STRING)
     year = 2022         # TO CALIBRATE (INTEGER)
