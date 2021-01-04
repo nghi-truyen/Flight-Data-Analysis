@@ -241,11 +241,11 @@ def Estimated_Stock_All_Companies(typ,year,month,df=data,df_types=data_types,air
     for company in list_company:
         mm,yyyy=airlines['End of contract'][company-1].month,airlines['End of contract'][company-1].year
         if mm+yyyy*12<month+year*12:
-            s_,y_,ci1_,ci2_,t_ = Estimated_Stock(company,unit_type,yyyy,mm,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
+            s_,y_,ci1_,ci2_,t_ = Estimated_Stock(company,typ,yyyy,mm,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
             if message:
                 print('The contract of company %d will end before %d/%d (in %d/%d)'%(company,month,year,mm,yyyy))
         else:
-            s_,y_,ci1_,ci2_,t_ = Estimated_Stock(company,unit_type,year,month,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
+            s_,y_,ci1_,ci2_,t_ = Estimated_Stock(company,typ,year,month,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
         s += s_
         y += y_
         ci1 += np.array(ci1_)
@@ -261,6 +261,10 @@ def Time_series(typ,month,year,df=data,df_types=data_types,airlines=airlines,Beg
         exit()
     else:
         points = np.linspace(start,end,end-start+1)
+        gap=len(points)-1
+        l=6
+        ind=[l*i for i in range(int(gap/l)+1)]+[-1]*int(gap%l!=0)
+        points=np.array([points[i] for i in ind]) # assuming that number of faillures is linear for every l=6 month
         s = np.zeros(len(points))
         for i in range(len(points)):
             mois=int(points[i])%12+(int(points[i])%12==0)*12
@@ -278,4 +282,4 @@ def Estimated_time(typ,N,month,year,df=data,df_types=data_types,airlines=airline
         mois=int(duration)%12+(int(duration)%12==0)*12
         annee = int((duration-mois)/12)
         pred_time = dt.datetime(annee,mois,1)
-    return pred_time
+    return pred_time,np.max(y)*tau-N

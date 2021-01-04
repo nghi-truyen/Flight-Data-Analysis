@@ -24,19 +24,20 @@ def Time_Forecasting():
         print("	RUNNING SIMULATIONS	  	     ")
         print("==========================================")
         ts = time.time()    
-        predicted_time = DefFunc.Estimated_time(DefFunc.unit_type,DefFunc.number_in_stock,DefFunc.month,DefFunc.year)
+        predicted_time,r = DefFunc.Estimated_time(DefFunc.unit_type,DefFunc.number_in_stock,DefFunc.month,DefFunc.year)
         te = time.time()
         print("==========================================")
         print("	SIMULATION PROCESS FINISHED!	  	 ")
         print("==========================================")
         if predicted_time ==0:
-            print("The number of product of type %s actually in stock is %d, which can afford %0.2f"%(DefFunc.unit_type,DefFunc.number_in_stock,100*DefFunc.service_level),end="")
+            print("The number of product of type %s actually in stock is %d, which can afford immediately %0.2f"%(DefFunc.unit_type,DefFunc.number_in_stock,100*DefFunc.service_level),end="")
             print("%",end="")
             print(" the need of customers until %d/%d"%(DefFunc.month,DefFunc.year))
         else:
-            print("The number of product of type %s actually in stock is %d, which can only afford %0.2f"%(DefFunc.unit_type,DefFunc.number_in_stock,100*DefFunc.service_level),end="")
+            print("The number of product of type %s actually in stock is %d, which can only afford immediately %0.2f"%(DefFunc.unit_type,DefFunc.number_in_stock,100*DefFunc.service_level),end="")
             print("%",end="")
             print(" the need of customers until %d/%d"%(predicted_time.month,predicted_time.year))
+            print("(","we are short of",round(r,2),"units to maintain this service level",").")
         print("Simulation time (by second): ", te-ts)
     
 # To run tests without pytest (debug)

@@ -11,13 +11,13 @@ INSA-AirbusFHS-DatasetPN_D-E-F.xlsx
 D
 *******************************
 - Month (must be INTEGER):
-6
+8
 *******************************
 - Year (must be INTEGER):
 2021
 *******************************
 - Number of type unit actually on stock (INTEGER): only useful for "Time_Forecasting()" function 
-20
+30
 *******************************
 - Service level (must be in (0,1)): only useful for "Time_Forecasting()" function
 0.9
