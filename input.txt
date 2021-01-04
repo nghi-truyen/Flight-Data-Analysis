@@ -4,7 +4,7 @@ INSA-AirbusFHS-DatasetPN_D-E-F.xlsx
 - Confidence level (must be in (0,1)):
 0.95
 *******************************
-- Company name (must be INTEGER) !!! If company==0 so we want to forecast for ALL COMPANIES.
+- Company name (must be INTEGER): only useful for "Number_Failures_Forecasting()" function !!! If company==0 so we want to forecast for ALL COMPANIES.
 0
 *******************************
 - Unit type (must be STRING):
