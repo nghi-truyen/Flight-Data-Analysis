@@ -12,9 +12,8 @@ import time
 
 import DefFunc
 
-Today = dt.datetime.now()
 def Time_Forecasting():
-    if DefFunc.month+DefFunc.year*12<=Today.month+Today.year*12:
+    if DefFunc.month+DefFunc.year*12<=DefFunc.Today.month+DefFunc.Today.year*12:
         print("Start time must be less than end time!")
         exit()
     if DefFunc.number_in_stock<0:
