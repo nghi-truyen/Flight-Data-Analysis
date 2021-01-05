@@ -10,6 +10,7 @@ from lifelines.utils import find_best_parametric_model
 from lifelines.statistics import logrank_test
 import datetime as dt
 import time
+import os
 
 import DefFunc
 
@@ -18,7 +19,7 @@ def Time_Forecasting():
         print("Start time must be less than end time!")
         exit()
     if DefFunc.number_in_stock<0:
-        print("Number in stock must be positive!")
+        print("Number of products on stock must be positive!")
         exit()
     else:
         print("==========================================")
@@ -31,17 +32,48 @@ def Time_Forecasting():
         print("==========================================")
         print("	SIMULATION PROCESS FINISHED!	  	 ")
         print("==========================================")
-        if predicted_time ==0:
-            print("The number of product of type %s actually in stock is %d, which can afford immediately %0.2f"%(DefFunc.unit_type,DefFunc.number_in_stock,100*DefFunc.service_level),end="")
+        if predicted_time == 0:
+            print("The number of product of type %s actually on stock is %d, which can afford immediately %0.2f"%(DefFunc.unit_type,DefFunc.number_in_stock,100*DefFunc.service_level),end="")
             print("%",end="")
             print(" the need of customers until %d/%d"%(DefFunc.month,DefFunc.year))
         else:
-            print("The number of product of type %s actually in stock is %d, which can only afford immediately %0.2f"%(DefFunc.unit_type,DefFunc.number_in_stock,100*DefFunc.service_level),end="")
+            print("The number of product of type %s actually on stock is %d, which can only afford immediately %0.2f"%(DefFunc.unit_type,DefFunc.number_in_stock,100*DefFunc.service_level),end="")
             print("%",end="")
             print(" the need of customers until %d/%d"%(predicted_time.month,predicted_time.year))
             print("(","we are short of",round(r,2),"units to maintain this service level",").")
         print("Simulation time (by second): ", te-ts)
+        return predicted_time,r,ts,te
     
-# To run tests without pytest (debug)
+# To run process and create output file
 if __name__ == "__main__":
-    Time_Forecasting()
+    predicted_time,r,ts,te = Time_Forecasting()
+    save = "empty"
+    while save not in ["y","n","yes","no"]:
+        save = input("Do you you to save this result? (y/n)")
+    if save in ["yes","y"]:
+        name = "Time_Failure_at_"+str(DefFunc.Today)
+        filename = "%s.out" % name
+        filepath = os.path.join('./output', filename)
+        if not os.path.exists('./output'):
+            os.makedirs('./output')
+        f=open(filepath,"w+")
+        
+        f.write('INPUT'+ '\n')
+        f.write("Unit type : " + DefFunc.unit_type + '\n')
+        f.write("Forecasting for : " + str(DefFunc.month) + '/' + str(DefFunc.year) + '\n')
+        f.write("Number of type unit actually on stock : "+str(DefFunc.number_in_stock)+'\n')
+        f.write("Service level : " + str(DefFunc.service_level) + '\n')
+        f.write("Repair rate : " + str(DefFunc.repair_rate) + '\n')
+        f.write('\n')
+        f.write("OUTPUT"+ '\n')
+        if predicted_time == 0:
+            aff = 'Yes'
+            f.write("Can products on stock afford immediately the need of customers until that day? "+str(aff)+'\n')
+        else:
+            aff = 'No'
+            f.write("Can products on stock afford immediately the need of customers until that day? "+str(aff)+'\n')
+            f.write("Estimated date the stock can afford need of customers : " + str(predicted_time.month)+'/'+str(predicted_time.year)+'\n')
+            f.write("Number of missing units to maintain service level : "+str(round(r,2))+'\n')
+        f.write("Simulation time : " + str(round(te-ts,2))+' s'+'\n')
+        f.close()
+        print("The result is saved on ./output/",name)

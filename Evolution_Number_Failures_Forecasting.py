@@ -14,7 +14,7 @@ import os
 
 import DefFunc
 
-def Number_Failures_Forecasting():
+def Evolution_Number_Failures_Forecasting(gap):
     if DefFunc.alpha <= 0 or DefFunc.alpha >= 1:
         print("Confidence level must be in (0,1)!")
         exit(2)
@@ -37,34 +37,42 @@ def Number_Failures_Forecasting():
     print("==========================================")
     DefFunc.different_or_not(DefFunc.unit_type,message=True)
     ts = time.time()
-    if DefFunc.company!=0:
-        s,y,ci1,ci2,t = DefFunc.Estimated_Stock(DefFunc.company,DefFunc.unit_type,DefFunc.year,DefFunc.month)
-    else:
-        s,y,ci1,ci2,t = DefFunc.Estimated_Stock_All_Companies(DefFunc.unit_type,DefFunc.year,DefFunc.month,message=True)
+    points,s=DefFunc.Time_series(DefFunc.unit_type,DefFunc.month,DefFunc.year,l=gap)
     te = time.time()
     print("==========================================")
     print("	SIMULATION PROCESS FINISHED!	  	 ")
     print("==========================================")
-    if DefFunc.company!=0:
-        print("Forecast for type %s unit of company %d from %d/%d until %d/%d:"%(DefFunc.unit_type,DefFunc.company,DefFunc.Today.month,DefFunc.Today.year,DefFunc.month,DefFunc.year))
-    else:
-        print("Forecast for type %s unit from %d/%d until %d/%d:"%(DefFunc.unit_type,DefFunc.Today.month,DefFunc.Today.year,DefFunc.month,DefFunc.year))
-    print("There are %d units which is actually on aircraft."%t)
-    print("Predicting a number of unit in average for stock: ",s)
-    print("with Empirical Confidence Interval (%0.2f,%0.2f), CLT Confidence Interval (%0.2f,%0.2f) at level %0.2f"%(ci1[0],ci1[1],ci2[0],ci2[1],100-100*DefFunc.alpha), end="")
-    print("% and with repair rate is", DefFunc.repair_rate)
+    print("Evolution of failure number of type %s from %d/%d until %d/%d:"%(DefFunc.unit_type,DefFunc.Today.month,DefFunc.Today.year,DefFunc.month,DefFunc.year))
+    length=len(points)
+    pts=[]
+    for i in range(length):
+        mois=int(points[i])%12+(int(points[i])%12==0)*12
+        annee=int((points[i]-mois)/12)
+        pts+=[str(dt.date(annee,mois,1))]
+    print("Time : ", pts)
+    print("Predicting failure number in average : ", s)
+    print("With repair rate is", DefFunc.repair_rate)
     print("Simulation time (by second): ", te-ts)
-    return s,y,ci1,ci2,t,te,ts
+    return pts,s,te,ts
     
 # To run process and create output file
 if __name__ == "__main__":
-    s,y,ci1,ci2,t,te,ts = Number_Failures_Forecasting()
+    while True:
+        try:
+            gap = int(input("A period time (by month) we want to evaluate for? (for example 1,2,3,...) : "))
+            if gap<1:
+                print("Oops! That was no valid number. Try again...")
+            else:
+                break
+        except ValueError:
+            print("Oops! That was no valid number. Try again...")
+    points,s,te,ts = Evolution_Number_Failures_Forecasting(gap)
     save = "empty"
     while save not in ["y","n","yes","no"]:
         save = input("Do you you to save this result? (y/n)")
     if save in ["yes","y"]:
-        name = "Number_Failures_at_"+str(DefFunc.Today)
-        filename = "%s.out" % name
+        name = "Evolution_Number_Failures_at_"+str(DefFunc.Today)
+        filename = "%s.plt" % name
         filepath = os.path.join('./output', filename)
         if not os.path.exists('./output'):
             os.makedirs('./output')
@@ -72,19 +80,14 @@ if __name__ == "__main__":
         
         f.write('INPUT'+ '\n')
         f.write("Unit type : " + DefFunc.unit_type + '\n')
-        if DefFunc.company==0:
-            comp = "All"
-        else:
-            comp = str(DefFunc.company)
-        f.write('Company : '+comp+'\n')
+        f.write("Period time by month : " + str(gap) + '\n')
         f.write("Forecasting for : " + str(DefFunc.month) + '/' + str(DefFunc.year) + '\n')
         f.write("Repair rate : " + str(DefFunc.repair_rate) + '\n')
         f.write('\n')
         f.write("OUTPUT"+ '\n')
-        f.write("Units which is actually on aircraft : " + str(t) + '\n')
-        f.write("Number of failures in 200 simulation times : " + str(y)+'\n')
-        f.write("Number of failures in average : "+str(round(s,1))+'\n')
-        f.write("Empirical Confidence Interval at "+str(round(100-100*DefFunc.alpha,2))+"% : "+'('+str(ci1[0])+','+str(ci1[1])+')'+'\n')
+        f.write("Time   "+"Number of failures in average" + '\n')
+        for i in range(len(s)):
+            f.write(str(points[i])+'     '+str(s[i])+'\n')
         f.write("Simulation time : " + str(round(te-ts,2))+' s'+'\n')
         
         f.close()

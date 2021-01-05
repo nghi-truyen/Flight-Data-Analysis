@@ -1,0 +1,12 @@
+INPUT
+Unit type : E
+Forecasting for : 8/2025
+Number of type unit actually on stock : 30
+Service level : 0.9
+Repair rate : 0.8
+
+OUTPUT
+Can products on stock afford immediately the need of customers until that day? No
+Estimated date the stock can afford need of customers : 6/2024
+Number of missing units to maintain service level : 16.45
+Simulation time : 66.83 s

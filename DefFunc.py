@@ -250,7 +250,7 @@ def different_or_not(typ,df=data_types,message=False):
     diff=(pval<0.05) and (min(old_new)/sum(old_new)>=0.1)
     if diff:
         if message:
-            print("The old parts and new parts of type %s have a different distribution!"%typ)
+            print("The old parts and new parts of type %s have different distributions!"%typ)
     return diff
 
 def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,rate=repair_rate):
@@ -273,14 +273,14 @@ def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=
         surv_new = kmf_new.survival_function_.to_numpy()
         time_new = kmf_new.timeline
         if FH_till_end>np.max(time_old): 
-            warnings.warn("Kaplan-Meier model of the old part of type {} data can not estimate the stock until that day. We apply the best parametric model to predict in this case.".format(str(typ)))
+            warnings.warn("Kaplan-Meier model of the old part of type %s can not estimate the stock until %d/%d. We apply the best parametric model to predict in this case."%(typ,month,year))
             bpm_old=best_parametric_model("old",df=df_types_diff)
             print("The best parametric model applied for old parts is:",bpm_old)
             time_old = np.linspace(0,FH_till_end,2000)
             surv_old = bpm_old.survival_function_at_times(time_old).to_numpy()
 
         if FH_till_end>np.max(time_new):
-            warnings.warn("Kaplan-Meier model of the new part of type {} data can not estimate the stock until that day. We apply the best parametric model to predict in this case.".format(str(typ)))
+            warnings.warn("Kaplan-Meier model of the new part of type %s can not estimate the stock until %d/%d. We apply the best parametric model to predict in this case."%(typ,month,year))
             bpm_new=best_parametric_model("new",df=df_types_diff)
             print("The best parametric model applied for new parts is:",bpm_new)
             time_new = np.linspace(0,FH_till_end,2000)
@@ -290,7 +290,7 @@ def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=
         survival = kmf.survival_function_.to_numpy()
         timeline = kmf.timeline
         if FH_till_end>np.max(timeline):
-            warnings.warn("Kaplan-Meier model of type {} data can not estimate the stock until that day. We apply the best parametric model to predict in this case.".format(str(typ)))
+            warnings.warn("Kaplan-Meier model of type %s can not estimate the stock until %d/%d. We apply the best parametric model to predict in this case."%(typ,month,year))
             bpm = best_parametric_model(typ,df=df_types)
             print("The best parametric model applied for this type is:",bpm)
             timeline = np.linspace(0,FH_till_end,2000)
@@ -335,7 +335,7 @@ def Estimated_Stock_All_Companies(typ,year,month,df=data,df_types=data_types,air
         t += t_
     return s,y,ci1,ci2,t
     
-def Time_series(typ,month,year,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200):
+def Time_series(typ,month,year,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,l=6):
     start = Begin.month+Begin.year*12
     end = month+year*12
     if end<=start:
@@ -344,7 +344,6 @@ def Time_series(typ,month,year,df=data,df_types=data_types,airlines=airlines,Beg
     else:
         points = np.linspace(start,end,end-start+1)
         gap=len(points)-1
-        l=6
         ind=[l*i for i in range(int(gap/l)+1)]+[-1]*int(gap%l!=0)
         points=np.array([points[i] for i in ind]) # assuming that number of faillures is linear for every l=6 month
         s = np.zeros(len(points))
