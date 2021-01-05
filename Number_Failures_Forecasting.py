@@ -61,7 +61,7 @@ if __name__ == "__main__":
     s,y,ci1,ci2,t,te,ts = Number_Failures_Forecasting()
     save = "empty"
     while save not in ["y","n","yes","no"]:
-        save = input("Do you you to save this result? (y/n)")
+        save = input("Do you want to save this result? (y/n)")
     if save in ["yes","y"]:
         name = "Number_Failures_at_"+str(DefFunc.Today)
         filename = "%s.out" % name
