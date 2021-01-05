@@ -60,10 +60,10 @@ For estimating of the number of failures at a determined time in the future, we 
 
 For evaluating the failure number as a function of time, we run `Evolution_Number_Failures_Forecasting.py` file:
 
-`python Evolution_Number_Failures_Forecasting.py`
+`$ python Evolution_Number_Failures_Forecasting.py`
 
 For estimating of the moment that we can not afford the need of customers, we run `Time_Forecasting.py` file:
 
 `$ python Time_Forecasting.py`
 
-Finally, the `output` directory presents some simulation output results.
+Finally, the `output` directory contains simulation output results.
