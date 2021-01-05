@@ -34,6 +34,8 @@ We first download the project and then, the `lifelines` library in Python is req
 
 `$ pip install lifelines`
 
+The version number of each package is presented in `requirements.txt`.
+
 The notebook file includes all of codes for the simulation process as well as the graphs to visualize.
 
 The `input.txt` file is to calibrate the parameters of simulations:
