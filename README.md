@@ -52,6 +52,8 @@ The `input.txt` file is to calibrate the parameters of simulations:
 
 - `<Service level>`: percentage to which customers' need shoud be met. Only useful for `Time_Forecasting()` function.
 
+- `<Repair rate>`: percentage to which the failure products can be repaired instead of replacing by new.
+
 For estimating of the number of failures at a determined time in the future, we run `Number_Failures_Forecasting.py` file with the command:
 
 `$ python Number_Failures_Forecasting.py`

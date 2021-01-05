@@ -7,6 +7,7 @@ import warnings
 from lifelines import KaplanMeierFitter
 from lifelines import NelsonAalenFitter
 from lifelines.utils import find_best_parametric_model
+from lifelines.statistics import logrank_test
 import datetime as dt
 import time
 
@@ -23,6 +24,7 @@ def Time_Forecasting():
         print("==========================================")
         print("	RUNNING SIMULATIONS	  	     ")
         print("==========================================")
+        DefFunc.different_or_not(DefFunc.unit_type,message=True)
         ts = time.time()    
         predicted_time,r = DefFunc.Estimated_time(DefFunc.unit_type,DefFunc.number_in_stock,DefFunc.month,DefFunc.year)
         te = time.time()

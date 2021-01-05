@@ -7,6 +7,7 @@ import warnings
 from lifelines import KaplanMeierFitter
 from lifelines import NelsonAalenFitter
 from lifelines.utils import find_best_parametric_model
+from lifelines.statistics import logrank_test
 import datetime as dt
 import time
 
@@ -33,6 +34,7 @@ def Number_Failures_Forecasting():
     print("==========================================")
     print("	RUNNING SIMULATIONS	  	     ")
     print("==========================================")
+    DefFunc.different_or_not(DefFunc.unit_type,message=True)
     ts = time.time()
     if DefFunc.company!=0:
         s,y,ci1,ci2,t = DefFunc.Estimated_Stock(DefFunc.company,DefFunc.unit_type,DefFunc.year,DefFunc.month)
@@ -48,8 +50,8 @@ def Number_Failures_Forecasting():
         print("Forecast for type %s unit from %d/%d until %d/%d:"%(DefFunc.unit_type,DefFunc.Today.month,DefFunc.Today.year,DefFunc.month,DefFunc.year))
     print("There are %d units which is actually on aircraft."%t)
     print("Predicting a number of unit in average for stock: ",s)
-    print("with Empirical Confidence Interval (%0.2f,%0.2f) and CLT Confidence Interval (%0.2f,%0.2f) at level %0.2f"%(ci1[0],ci1[1],ci2[0],ci2[1],100-100*DefFunc.alpha), end="")
-    print("%.")
+    print("with Empirical Confidence Interval (%0.2f,%0.2f), CLT Confidence Interval (%0.2f,%0.2f) at level %0.2f"%(ci1[0],ci1[1],ci2[0],ci2[1],100-100*DefFunc.alpha), end="")
+    print("% and with repair rate is", DefFunc.repair_rate)
     print("Simulation time (by second): ", te-ts)
     
 # To run tests without pytest (debug)

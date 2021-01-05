@@ -7,6 +7,7 @@ import warnings
 from lifelines import KaplanMeierFitter
 from lifelines import NelsonAalenFitter
 from lifelines.utils import find_best_parametric_model
+from lifelines.statistics import logrank_test
 import datetime as dt
 import time
 
@@ -32,6 +33,7 @@ if import_by_txt_file:
     month = int(input_[13])           # INTEGER
     number_in_stock = int(input_[19]) # (INTEGER): only useful for "Time_Forecasting()" function 
     service_level = float(input_[22]) # must be in (0,1): only useful for "Time_Forecasting()" function
+    repair_rate = round(float(input_[25]),2) # must be in (0,1)
 else:
     confidence_level = 0.95    # TO CALIBRATE (must be in (0,1))
     alpha = 1-confidence_level
@@ -46,6 +48,7 @@ else:
     month = 12           # TO CALIBRATE (INTEGER)
     number_in_stock = 60 # TO CALIBRATE (INTEGER): only useful for "Time_Forecasting()" function
     service_level = 0.9 # TO CALIBRATE (must be in (0,1)): only useful for "Time_Forecasting()" function
+    repair_rate = 0.9 # must be in (0,1)
 
 ###############################################
 ##					     ##
@@ -146,6 +149,14 @@ def best_parametric_model(typ,df=data_types): # find the best parametric model w
     best_model = find_best_parametric_model(T, d, scoring_method="AIC")[0]
     return best_model
     
+def old_vs_new(typ,df=data_types):
+    data_type = df[typ]
+    new_or_not = data_type["TSI"]==data_type["TSN"]
+    old = data_type[new_or_not==False]
+    new = data_type[new_or_not==True]
+    results = logrank_test(old["TSI"], new["TSI"], event_observed_A=old["failed"], event_observed_B=new["failed"])
+    return results,(len(old.to_numpy()), len(new.to_numpy()))
+    
 def inverse_sampling(kapmei, timeline):
     u = np.random.uniform()
     if u < kapmei[-1]:
@@ -184,6 +195,36 @@ def num_of_fails_list(TSI_list, T, kapmei, timeline):
     total_fails = np.sum(n_fails_list)
     return total_fails
     
+def num_of_fails_indivi_kapmei_diff(TSI, TSN,T,k_old,t_old,k_new,t_new,rate):
+    if TSI==TSN:
+        t = conditional_inverse_sampling(k_new, t_new, TSI)
+        cum = (t<0)*np.max(t_new)
+    else:
+        t = conditional_inverse_sampling(k_old, t_old, TSI)
+        cum = (t<0)*np.max(t_old)
+    if t <= T:
+        n_fails = 0 
+        sum_t = cum + (t>=0)*t
+        while sum_t <= T:
+            if np.random.uniform(0,1)<rate:
+                t = inverse_sampling(k_old, t_old)
+                sum_t += (t<0)*np.max(t_old) + (t>=0)*t
+            else:
+                t = inverse_sampling(k_new, t_new)
+                sum_t += (t<0)*np.max(t_new) + (t>=0)*t
+            n_fails += 1
+        return n_fails
+    else: 
+        return 0
+
+def num_of_fails_list_diff(TSI_list, TSN_list,T,k_old,t_old,k_new,t_new,rate):
+    n_fails_list = []
+    for i in range(len(TSI_list)):
+        n_fails = num_of_fails_indivi_kapmei_diff(TSI_list[i],TSN_list[i],T,k_old,t_old,k_new,t_new,rate)
+        n_fails_list += [n_fails]
+    total_fails = np.sum(n_fails_list)
+    return total_fails
+    
 # Confidence Intervals
 def CI(Y,alpha=alpha):
     n=len(Y)
@@ -203,19 +244,57 @@ list_company = pd.unique(airlines["Company"])
 list_company = list_company[np.logical_not(pd.isnull(list_company))]
 Today = dt.datetime.now()
 
-def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200):
+def different_or_not(typ,df=data_types,message=False):
+    r,old_new=old_vs_new(typ,df=df)
+    pval=r.p_value
+    diff=(pval<0.05) and (min(old_new)/sum(old_new)>=0.1)
+    if diff:
+        if message:
+            print("The old parts and new parts of type %s have a different distribution!"%typ)
+    return diff
+
+def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,rate=repair_rate):
 # MC is number iteration of Monte-Carlo
-    survival = KMF(typ,df=df_types).survival_function_.to_numpy()
-    timeline = KMF(typ,df=df_types).timeline
     
     FH_per_month = float(airlines[airlines['Company']==company]['FH per aircraft per month'])
     End = dt.datetime(year, month, 1)
     FH_till_end = FH_per_month*((End.year-Begin.year)*12+End.month-Begin.month)
+    diff = different_or_not(typ,df=df_types)
     
-    if FH_till_end>np.max(timeline):
-        warnings.warn("Kaplan-Meier model of type {} data can not estimate the stock until that day. We apply the best parametric model to predict in this case.".format(str(typ)))
-        timeline = np.linspace(0,FH_till_end,2000)
-        survival = best_parametric_model(typ,df=df_types).survival_function_at_times(timeline).to_numpy()
+    if diff:
+        df_types_diff = df_types.copy()
+        df_types_diff.pop(typ,None)
+        df_types_diff['new']=df_types[typ][df_types[typ].TSI==df_types[typ].TSN]
+        df_types_diff['old']=df_types[typ][df_types[typ].TSI!=df_types[typ].TSN]
+        kmf_old = KMF("old",df=df_types_diff)
+        kmf_new = KMF("new",df=df_types_diff)
+        surv_old = kmf_old.survival_function_.to_numpy()
+        time_old = kmf_old.timeline
+        surv_new = kmf_new.survival_function_.to_numpy()
+        time_new = kmf_new.timeline
+        if FH_till_end>np.max(time_old): 
+            warnings.warn("Kaplan-Meier model of the old part of type {} data can not estimate the stock until that day. We apply the best parametric model to predict in this case.".format(str(typ)))
+            bpm_old=best_parametric_model("old",df=df_types_diff)
+            print("The best parametric model applied for old parts is:",bpm_old)
+            time_old = np.linspace(0,FH_till_end,2000)
+            surv_old = bpm_old.survival_function_at_times(time_old).to_numpy()
+
+        if FH_till_end>np.max(time_new):
+            warnings.warn("Kaplan-Meier model of the new part of type {} data can not estimate the stock until that day. We apply the best parametric model to predict in this case.".format(str(typ)))
+            bpm_new=best_parametric_model("new",df=df_types_diff)
+            print("The best parametric model applied for new parts is:",bpm_new)
+            time_new = np.linspace(0,FH_till_end,2000)
+            surv_new = bpm_new.survival_function_at_times(time_new).to_numpy()
+    else:
+        kmf=KMF(typ,df=df_types)
+        survival = kmf.survival_function_.to_numpy()
+        timeline = kmf.timeline
+        if FH_till_end>np.max(timeline):
+            warnings.warn("Kaplan-Meier model of type {} data can not estimate the stock until that day. We apply the best parametric model to predict in this case.".format(str(typ)))
+            bpm = best_parametric_model(typ,df=df_types)
+            print("The best parametric model applied for this type is:",bpm)
+            timeline = np.linspace(0,FH_till_end,2000)
+            survival = bpm.survival_function_at_times(timeline).to_numpy()
 
     dat = df[df.Company==company]
     dat = dat[dat.PN==typ]
@@ -223,29 +302,32 @@ def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=
     total = len(dat.TSI)
   
     list_TSI = dat[dat.failed==False].TSI.to_numpy()
-#    list_TSI = np.concatenate((list_TSI, np.zeros(sum(dat.failed))), axis=0)
+    list_TSN = dat[dat.failed==False].TSN.to_numpy()
 
     stock = 0
     y=[]
     for i in range(MC):
-        a = num_of_fails_list(list_TSI,FH_till_end,survival,timeline)
+        if diff:
+            a = num_of_fails_list_diff(list_TSI,list_TSN,FH_till_end,surv_old,time_old,surv_new,time_new,rate)
+        else:
+            a = num_of_fails_list(list_TSI,FH_till_end,survival,timeline)
         y += [a]
         stock += a
     stock = stock/MC  
-    # CI
+    ## CI
     ci1,ci2=CI(y)
     return stock,y,ci1,ci2,total
     
-def Estimated_Stock_All_Companies(typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,message=False):
+def Estimated_Stock_All_Companies(typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,message=False,rate=repair_rate):
     s,y,ci1,ci2,t = 0,np.zeros(MC),np.zeros(2),np.zeros(2),0
     for company in list_company:
         mm,yyyy=airlines['End of contract'][company-1].month,airlines['End of contract'][company-1].year
         if mm+yyyy*12<month+year*12:
-            s_,y_,ci1_,ci2_,t_ = Estimated_Stock(company,typ,yyyy,mm,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
+            s_,y_,ci1_,ci2_,t_ = Estimated_Stock(company,typ,yyyy,mm,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC,rate=rate)
             if message:
                 print('The contract of company %d will end before %d/%d (in %d/%d)'%(company,month,year,mm,yyyy))
         else:
-            s_,y_,ci1_,ci2_,t_ = Estimated_Stock(company,typ,year,month,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
+            s_,y_,ci1_,ci2_,t_ = Estimated_Stock(company,typ,year,month,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC,rate=rate)
         s += s_
         y += y_
         ci1 += np.array(ci1_)

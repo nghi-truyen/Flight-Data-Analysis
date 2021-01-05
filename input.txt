@@ -14,10 +14,13 @@ D
 8
 *******************************
 - Year (must be INTEGER):
-2021
+2022
 *******************************
 - Number of type unit actually on stock (INTEGER): only useful for "Time_Forecasting()" function 
 30
 *******************************
 - Service level (must be in (0,1)): only useful for "Time_Forecasting()" function
 0.9
+*******************************
+- Repair rate (must be in (0,1)):
+0.8
