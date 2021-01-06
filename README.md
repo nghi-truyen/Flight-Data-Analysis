@@ -8,7 +8,7 @@
 
 ## *Forecast of aircraft parts failures and optimization of spare parts stock management*
 
-### Introduction:
+### Task overview:
 
 We work on “Aircraft component reliability”, which is a vital contributing factor for dispatch reliability and aircraft system reliability. The main purpose of this project is to utilize the statistical models in order to predict if the parts of aircraft will be failure, and then to optimize the stock management.
 
