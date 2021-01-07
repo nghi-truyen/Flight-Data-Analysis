@@ -36,7 +36,7 @@ We first download the project and then, the `lifelines` library in Python is req
 
 The version number of each package is presented in `requirements.txt`.
 
-The notebook file includes all of codes for the simulation process as well as the graphs to visualize.
+The notebook file `/doc/FlightDataAnalysis.ipynb` includes all of codes for the simulation process as well as the graphs to visualize.
 
 The `input.txt` file is to calibrate the parameters of simulations:
 
@@ -68,4 +68,4 @@ For estimating of the moment that we can not afford the need of customers, we ru
 
 `$ python Time_Forecasting.py`
 
-Finally, the `output` directory contains simulation output results.
+Finally, the `/output` directory contains simulation output results.

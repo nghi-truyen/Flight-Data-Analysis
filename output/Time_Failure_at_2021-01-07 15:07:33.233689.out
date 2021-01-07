@@ -1,10 +1,10 @@
 INPUT
 Unit type : E
 Forecasting for : 8/2022
-Number of type unit actually on stock : 30
+Number of type unit actually on stock : 20
 Service level : 0.9
 Repair rate : 0.8
 
 OUTPUT
 Can products on stock afford immediately the need of customers until that day? Yes
-Simulation time : 5.25 s
+Simulation time : 5.23 s

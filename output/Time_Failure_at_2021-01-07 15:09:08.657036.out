@@ -7,6 +7,6 @@ Repair rate : 0.8
 
 OUTPUT
 Can products on stock afford immediately the need of customers until that day? No
-Estimated date the stock can afford need of customers : 6/2024
-Number of missing units to maintain service level : 16.45
-Simulation time : 66.83 s
+Estimated date the stock can no longer met the need of customers : 6/2024
+Number of missing units to maintain service level : 15.86
+Simulation time : 67.49 s
