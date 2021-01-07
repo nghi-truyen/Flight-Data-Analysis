@@ -66,13 +66,12 @@ if __name__ == "__main__":
         f.write("Repair rate : " + str(DefFunc.repair_rate) + '\n')
         f.write('\n')
         f.write("OUTPUT"+ '\n')
+        f.write("Can products on stock afford immediately "+str(round(100*DefFunc.service_level,2))+"% the need of customers until that day? ")
         if predicted_time == 0:
-            aff = 'Yes'
-            f.write("Can products on stock afford immediately the need of customers until that day? "+str(aff)+'\n')
+            f.write("Yes"+'\n')
         else:
-            aff = 'No'
-            f.write("Can products on stock afford immediately the need of customers until that day? "+str(aff)+'\n')
-            f.write("Estimated date the stock can no longer met the need of customers : " + str(predicted_time.month)+'/'+str(predicted_time.year)+'\n')
+            f.write("No"+'\n')
+            f.write("Estimated date the stock can no longer maintain this service level : " + str(predicted_time.month)+'/'+str(predicted_time.year)+'\n')
             f.write("Number of missing units to maintain service level : "+str(round(r,2))+'\n')
         f.write("Simulation time : " + str(round(te-ts,2))+' s'+'\n')
         f.close()
