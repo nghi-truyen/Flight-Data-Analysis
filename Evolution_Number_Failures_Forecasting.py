@@ -37,7 +37,7 @@ def Evolution_Number_Failures_Forecasting(gap):
     print("==========================================")
     DefFunc.different_or_not(DefFunc.unit_type,message=True)
     ts = time.time()
-    points,s=DefFunc.Time_series(DefFunc.unit_type,DefFunc.month,DefFunc.year,l=gap)
+    points,s,lower,upper=DefFunc.Time_series(DefFunc.unit_type,DefFunc.month,DefFunc.year,l=gap)
     te = time.time()
     print("==========================================")
     print("	SIMULATION PROCESS FINISHED!	  	 ")
@@ -51,9 +51,10 @@ def Evolution_Number_Failures_Forecasting(gap):
         pts+=[str(dt.date(annee,mois,1))]
     print("Time : ", pts)
     print("Predicting failure number in average : ", s)
+    print("Empirical Confidence Interval : ", np.array([[lower[i],upper[i]] for i in range(len(lower))]))
     print("With repair rate is", DefFunc.repair_rate)
     print("Simulation time (by second): ", te-ts)
-    return pts,s,te,ts
+    return pts,s,lower,upper,te,ts
     
 # To run process and create output file
 if __name__ == "__main__":
@@ -66,7 +67,11 @@ if __name__ == "__main__":
                 break
         except ValueError:
             print("Oops! That was no valid number. Try again...")
-    points,s,te,ts = Evolution_Number_Failures_Forecasting(gap)
+    points,s,s1,s2,te,ts = Evolution_Number_Failures_Forecasting(gap)
+    for i in range(len(s)):
+        s[i] = round(s[i],2)
+        s1[i] = round(s1[i],2)
+        s2[i] = round(s2[i],2)
     save = "empty"
     while save not in ["y","n","yes","no"]:
         save = input("Do you want to save this result? (y/n)")
@@ -85,9 +90,11 @@ if __name__ == "__main__":
         f.write("Repair rate : " + str(DefFunc.repair_rate) + '\n')
         f.write('\n')
         f.write("OUTPUT"+ '\n')
-        f.write("Time   "+"Number of failures in average" + '\n')
-        for i in range(len(s)):
-            f.write(str(points[i])+'     '+str(s[i])+'\n')
+        f.write("Time           "+"Number of failures in average" + '            '+'Lower '+str(round(100*DefFunc.alpha,2))+'%'+'                    '+'Upper '+str(round(100-100*DefFunc.alpha,2))+'%'+'\n')
+        
+        col_format = "{:<30}" * 4 + "\n"   # 2 left-justfied columns with 5 character width
+        for res in zip(points,s,s1,s2):
+            f.write(col_format.format(*res))
         f.write("Simulation time : " + str(round(te-ts,2))+' s'+'\n')
         
         f.close()

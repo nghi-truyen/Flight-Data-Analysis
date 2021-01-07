@@ -347,14 +347,19 @@ def Time_series(typ,month,year,df=data,df_types=data_types,airlines=airlines,Beg
         ind=[l*i for i in range(int(gap/l)+1)]+[-1]*int(gap%l!=0)
         points=np.array([points[i] for i in ind]) # assuming that number of faillures is linear for every l=6 month
         s = np.zeros(len(points))
+        s_lower = np.zeros(len(points))
+        s_upper = np.zeros(len(points))
         for i in range(len(points)):
             mois=int(points[i])%12+(int(points[i])%12==0)*12
-            s[i] = Estimated_Stock_All_Companies(typ,int((points[i]-mois)/12),mois,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)[0]
-    return points,s
+            ss,w,ci,r,q = Estimated_Stock_All_Companies(typ,int((points[i]-mois)/12),mois,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
+            s[i]=ss
+            s_lower[i] = ci[0]
+            s_upper[i] = ci[1]
+    return points,s,s_lower,s_upper
 
 def Estimated_time(typ,N,month,year,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,tau=service_level):
     P = N/tau
-    x,y=Time_series(typ,month,year,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)
+    x,y=Time_series(typ,month,year,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)[:2]
     if P>=np.max(y):
         pred_time = 0
     else:

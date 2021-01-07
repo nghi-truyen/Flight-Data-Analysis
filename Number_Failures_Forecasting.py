@@ -84,7 +84,7 @@ if __name__ == "__main__":
         f.write("Units which is actually on aircraft : " + str(t) + '\n')
         f.write("Number of failures in 200 simulation times : " + str(y)+'\n')
         f.write("Number of failures in average : "+str(round(s,1))+'\n')
-        f.write("Empirical Confidence Interval at "+str(round(100-100*DefFunc.alpha,2))+"% : "+'('+str(ci1[0])+','+str(ci1[1])+')'+'\n')
+        f.write("Empirical Confidence Interval at "+str(round(100-100*DefFunc.alpha,2))+"% : "+'('+str(round(ci1[0],2))+','+str(round(ci1[1],2))+')'+'\n')
         f.write("Simulation time : " + str(round(te-ts,2))+' s'+'\n')
         
         f.close()
