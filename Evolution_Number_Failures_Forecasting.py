@@ -92,7 +92,7 @@ if __name__ == "__main__":
         f.write("OUTPUT"+ '\n')
         f.write("Time           "+"Number of failures in average" + '            '+'Lower '+str(round(100*DefFunc.alpha,2))+'%'+'                    '+'Upper '+str(round(100-100*DefFunc.alpha,2))+'%'+'\n')
         
-        col_format = "{:<30}" * 4 + "\n"   # 2 left-justfied columns with 5 character width
+        col_format = "{:<30}" * 4 + "\n" 
         for res in zip(points,s,s1,s2):
             f.write(col_format.format(*res))
         f.write("Simulation time : " + str(round(te-ts,2))+' s'+'\n')
