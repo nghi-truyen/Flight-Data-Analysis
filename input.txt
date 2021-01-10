@@ -10,14 +10,14 @@ INSA-AirbusFHS-DatasetPN_D-E-F.xlsx
 - Unit type (must be STRING):
 D
 *******************************
-- Month (must be INTEGER):
-8
+- Month (must be INTEGER):  not useful for "Time_Forecasting()"
+6
 *******************************
-- Year (must be INTEGER):
-2022
+- Year (must be INTEGER):   not useful for "Time_Forecasting()"
+2025
 *******************************
 - Number of type unit actually on stock (INTEGER): only useful for "Time_Forecasting()" function 
-30
+100
 *******************************
 - Service level (must be in (0,1)): only useful for "Time_Forecasting()" function
 0.9

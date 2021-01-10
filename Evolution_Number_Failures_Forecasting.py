@@ -90,7 +90,7 @@ if __name__ == "__main__":
         f.write("Repair rate : " + str(DefFunc.repair_rate) + '\n')
         f.write('\n')
         f.write("OUTPUT"+ '\n')
-        f.write("Time           "+"Number of failures in average" + '            '+'Lower '+str(round(100*DefFunc.alpha,2))+'%'+'                    '+'Upper '+str(round(100-100*DefFunc.alpha,2))+'%'+'\n')
+        f.write("Time           "+"Number of failures in average" + '            '+'Lower '+str(round(100*DefFunc.alpha/2,2))+'%'+'                    '+'Upper '+str(round(100-100*DefFunc.alpha/2,2))+'%'+'\n')
         
         col_format = "{:<30}" * 4 + "\n" 
         for res in zip(points,s,s1,s2):

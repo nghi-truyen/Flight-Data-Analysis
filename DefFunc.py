@@ -29,8 +29,8 @@ if import_by_txt_file:
     company = int(input_[7])         # must be in INTEGER: only useful for Number_Failures_Forecasting function
     # If company==0 so we want to forecast for ALL COMPANIES
     unit_type = str(input_[10][:-1].replace(" ", "")) # STRING
-    year = int(input_[16])         # INTEGER
-    month = int(input_[13])           # INTEGER
+    year = int(input_[16])         # INTEGER This is not useful for for `Time_Forecasting()` function.
+    month = int(input_[13])           # INTEGER This is not useful for for `Time_Forecasting()` function.
     number_in_stock = int(input_[19]) # (INTEGER): only useful for "Time_Forecasting()" function 
     service_level = float(input_[22]) # must be in (0,1): only useful for "Time_Forecasting()" function
     repair_rate = round(float(input_[25]),2) # must be in (0,1)
@@ -44,8 +44,8 @@ else:
     company = 5         # TO CALIBRATE (must be in INTEGER): only useful for "Number_Failures_Forecasting()" function
     # !!! If company==0 so we want to forecast for ALL COMPANIES
     unit_type = 'A' # TO CALIBRATE (STRING)
-    year = 2022         # TO CALIBRATE (INTEGER)
-    month = 12           # TO CALIBRATE (INTEGER)
+    year = 2022         # TO CALIBRATE (INTEGER) This is not useful for for `Time_Forecasting()` function.
+    month = 12           # TO CALIBRATE (INTEGER) This is not useful for for `Time_Forecasting()` function.
     number_in_stock = 60 # TO CALIBRATE (INTEGER): only useful for "Time_Forecasting()" function
     service_level = 0.9 # TO CALIBRATE (must be in (0,1)): only useful for "Time_Forecasting()" function
     repair_rate = 0.9 # must be in (0,1)
@@ -165,7 +165,7 @@ def inverse_sampling(kapmei, timeline):
         T = 0
     else:
         arg = np.argmax(kapmei<=u)-1
-        T = timeline[arg]+(timeline[arg+1]-timeline[arg])*(kapmei[arg]-u)/(kapmei[arg]-kapmei[arg+1])
+        T = float(timeline[arg]+(timeline[arg+1]-timeline[arg])*(kapmei[arg]-u)/(kapmei[arg]-kapmei[arg+1]))
     return T
 
 def conditional_inverse_sampling(kapmei, timeline, TSI):
@@ -357,15 +357,140 @@ def Time_series(typ,month,year,df=data,df_types=data_types,airlines=airlines,Beg
             s_upper[i] = ci[1]
     return points,s,s_lower,s_upper
 
-def Estimated_time(typ,N,month,year,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,tau=service_level):
-    P = N/tau
-    x,y=Time_series(typ,month,year,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC)[:2]
-    if P>=np.max(y):
-        pred_time = 0
+def lifetime_simulation_indivi(TSI, T, kapmei, timeline):    
+    t = conditional_inverse_sampling(kapmei, timeline, TSI)
+    serie = []
+    if t <= T: 
+        sum_t = (t<0)*np.max(timeline) + (t>=0)*t
+        while sum_t <= T:
+            serie += [sum_t]
+            t = inverse_sampling(kapmei, timeline)
+            sum_t += (t<0)*np.max(timeline) + (t>=0)*t
+    return serie
+
+def lifetime_simulation_list(TSI_list, T, kapmei, timeline):
+    series = []
+    for TSI in TSI_list:
+        serie = lifetime_simulation_indivi(TSI, T, kapmei, timeline)
+        series += serie
+    return np.sort(series)
+    
+def lifetime_simulation_indivi_diff(TSI, TSN,T,k_old,t_old,k_new,t_new,rate):
+    if TSI==TSN:
+        t = conditional_inverse_sampling(k_new, t_new, TSI)
+        cum = (t<0)*np.max(t_new)
     else:
-        arg = np.argmin(y<=P)-1
-        duration = x[arg]+(x[arg+1]-x[arg])*(y[arg]-P)/(y[arg]-y[arg+1])
-        mois=int(duration)%12+(int(duration)%12==0)*12
-        annee = int((duration-mois)/12)
-        pred_time = dt.datetime(annee,mois,1)
-    return pred_time,np.max(y)*tau-N
+        t = conditional_inverse_sampling(k_old, t_old, TSI)
+        cum = (t<0)*np.max(t_old)
+    serie = []
+    if t <= T:
+        sum_t = cum + (t>=0)*t
+        while sum_t <= T:
+            serie += [sum_t]
+            if np.random.uniform(0,1)<rate:
+                t = inverse_sampling(k_old, t_old)
+                sum_t += (t<0)*np.max(t_old) + (t>=0)*t
+            else:
+                t = inverse_sampling(k_new, t_new)
+                sum_t += (t<0)*np.max(t_new) + (t>=0)*t
+    return serie
+
+def lifetime_simulation_list_diff(TSI_list, TSN_list,T,k_old,t_old,k_new,t_new,rate):
+    series = []
+    for i in range(len(TSI_list)):
+        serie = lifetime_simulation_indivi_diff(TSI_list[i],TSN_list[i],T,k_old,t_old,k_new,t_new,rate)
+        series += serie
+    return np.sort(series)
+    
+def Estimated_time_company(company,typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,rate=repair_rate,tau=service_level):
+    FH_per_month = float(airlines[airlines['Company']==company]['FH per aircraft per month'])
+    End = dt.datetime(year, month, 1)
+    FH_till_end = FH_per_month*((End.year-Begin.year)*12+End.month-Begin.month)
+    diff = different_or_not(typ,df=df_types)
+
+    if diff:
+        df_types_diff = df_types.copy()
+        df_types_diff.pop(typ,None)
+        df_types_diff['new']=df_types[typ][df_types[typ].TSI==df_types[typ].TSN]
+        df_types_diff['old']=df_types[typ][df_types[typ].TSI!=df_types[typ].TSN]
+        kmf_old = KMF("old",df=df_types_diff)
+        kmf_new = KMF("new",df=df_types_diff)
+        surv_old = kmf_old.survival_function_.to_numpy()
+        time_old = kmf_old.timeline
+        surv_new = kmf_new.survival_function_.to_numpy()
+        time_new = kmf_new.timeline
+        if FH_till_end>np.max(time_old): 
+            warnings.warn("Kaplan-Meier model of the old part of type %s can not estimate the stock until %d/%d. We apply the best parametric model to predict in this case."%(typ,month,year))
+            bpm_old=best_parametric_model("old",df=df_types_diff)
+            print("The best parametric model applied for old parts is:",bpm_old)
+            time_old = np.linspace(0,FH_till_end,2000)
+            surv_old = bpm_old.survival_function_at_times(time_old).to_numpy()
+        if FH_till_end>np.max(time_new):
+            warnings.warn("Kaplan-Meier model of the new part of type %s can not estimate the stock until %d/%d. We apply the best parametric model to predict in this case."%(typ,month,year))
+            bpm_new=best_parametric_model("new",df=df_types_diff)
+            print("The best parametric model applied for new parts is:",bpm_new)
+            time_new = np.linspace(0,FH_till_end,2000)
+            surv_new = bpm_new.survival_function_at_times(time_new).to_numpy()
+    else:
+        kmf=KMF(typ,df=df_types)
+        survival = kmf.survival_function_.to_numpy()
+        timeline = kmf.timeline
+        if FH_till_end>np.max(timeline):
+            warnings.warn("Kaplan-Meier model of type %s can not estimate the stock until %d/%d. We apply the best parametric model to predict in this case."%(typ,month,year))
+            bpm = best_parametric_model(typ,df=df_types)
+            print("The best parametric model applied for this type is:",bpm)
+            timeline = np.linspace(0,FH_till_end,2000)
+            survival = bpm.survival_function_at_times(timeline).to_numpy()
+
+    dat = df[df.Company==company]
+    dat = dat[dat.PN==typ]
+    dat = dat[dat.On_Aircraft==True]
+    total = len(dat.TSI)
+  
+    list_TSI = dat[dat.failed==False].TSI.to_numpy()
+    list_TSN = dat[dat.failed==False].TSN.to_numpy()
+    
+    times=[]
+    for i in range(MC):
+        if diff:
+            time = lifetime_simulation_list_diff(list_TSI,list_TSN,FH_till_end,surv_old,time_old,surv_new,time_new,rate)
+        else:
+            time = lifetime_simulation_list(list_TSI,FH_till_end,survival,timeline)
+        time = time/FH_per_month+12*Begin.year+Begin.month
+        times += [time]
+    return times
+
+def Estimated_time(typ,N,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,rate=repair_rate,tau=service_level,message=False):
+    P = int(N/tau)
+    total_times = []
+    t_max=[]
+    for company in list_company:
+        mm,yyyy=airlines['End of contract'][company-1].month,airlines['End of contract'][company-1].year
+        t_max+=[mm+yyyy*12]
+        times = Estimated_time_company(company,typ,yyyy,mm,df=df,df_types=df_types,airlines=airlines,Begin=Begin,MC=MC,rate=rate)
+        if message:
+            print('The contract of company %d will end in %d/%d'%(company,mm,yyyy))
+        total_times += [times]
+    tmax=np.max(t_max)
+    y=[]
+    for i in range(MC):
+        y_i = np.array([])
+        for j in range(len(list_company)):
+            y_i = np.append(y_i,total_times[j][i])
+        y+=[np.sort(y_i)]
+    time_estimated = np.array([y[i][P-1] if P<=len(y[i]) else tmax for i in range(MC)])
+    ac = np.array([1 if time_estimated[i]==tmax else 0 for i in range(MC)])
+    num_afford = np.sum(ac)
+    if num_afford > 0:
+        time_mean = np.median(time_estimated)
+        ci = (np.quantile(time_estimated,alpha),tmax)
+    else:
+        time_mean = np.mean(time_estimated)
+        ci,ci2 = CI(time_estimated)
+    return time_mean,time_estimated,ci
+    
+def month_to_datetime(n):
+    year=int(n/12)-1*(int(n)%12==0)
+    month=int(n-year*12)
+    day=int((n-year*12-month)*30)+1
+    return dt.date(year,month+12*(month==0),day)

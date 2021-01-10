@@ -48,7 +48,7 @@ The `input.txt` file is to calibrate the parameters of simulations:
 
 - `<Unit type>`: type of unit we want to forecast for.
 
-- `<Month>` and `<Year>`: the moment that we want to forecast in the future.
+- `<Month>` and `<Year>`: the moment that we want to forecast in the future. This is not useful for for `Time_Forecasting()` function.
 
 - `<Number of type unit actually on stock>`: number of product of type `<Unit type>` available on stock at the moment. This only useful for `Time_Forecasting()` function. 
 
