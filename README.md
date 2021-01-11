@@ -52,7 +52,7 @@ The `input.txt` file is to calibrate the parameters of simulations:
 
 - `<Number of type unit actually on stock>`: number of product of type `<Unit type>` available on stock at the moment. This only useful for `Time_Forecasting()` function. 
 
-- `<Service level>`: percentage to which customers' need shoud be met. Only useful for `Time_Forecasting()` function.
+- `<Service level>`: percentage to which customers' need should be met. Only useful for `Time_Forecasting()` function.
 
 - `<Repair rate>`: percentage to which the failure products can be repaired instead of replacing by new.
 
@@ -64,7 +64,7 @@ For evaluating the failure number as a function of time, we run `Evolution_Numbe
 
 `$ python Evolution_Number_Failures_Forecasting.py`
 
-For estimating of the moment that we can not afford immediately the need of customers, we run `Time_Forecasting.py` file:
+For estimating of the moment that we can not immediately afford the need of customers, we run `Time_Forecasting.py` file:
 
 `$ python Time_Forecasting.py`
 
