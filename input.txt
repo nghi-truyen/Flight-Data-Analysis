@@ -17,7 +17,7 @@ D
 2025
 *******************************
 - Number of type unit actually on stock (INTEGER): only useful for "Time_Forecasting()" function 
-100
+500
 *******************************
 - Service level (must be in (0,1)): only useful for "Time_Forecasting()" function
 0.9

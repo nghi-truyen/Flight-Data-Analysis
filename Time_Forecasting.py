@@ -53,7 +53,7 @@ if __name__ == "__main__":
     while save not in ["y","n","yes","no"]:
         save = input("Do you want to save this result? (y/n)")
     if save in ["yes","y"]:
-        name = "Time_Failure_at_"+str(DefFunc.Today)
+        name = "Time_Failure_at_"+str(DefFunc.Today).replace(" ","_")
         filename = "%s.out" % name
         filepath = os.path.join('./output', filename)
         if not os.path.exists('./output'):

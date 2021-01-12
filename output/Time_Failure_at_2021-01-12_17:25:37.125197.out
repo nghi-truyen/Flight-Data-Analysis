@@ -1,0 +1,10 @@
+INPUT
+Unit type : D
+Number of part actually on stock : 100
+Service level : 0.9
+Repair rate : 0.8
+
+OUTPUT
+Estimated out-of-stock date with 90.0% service level : 2022-03-03
+Empirical Confidence Interval at 95.0% : [2021-12-21  2022-05-12]
+Simulation time : 85.99 s
