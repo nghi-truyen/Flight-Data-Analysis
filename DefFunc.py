@@ -253,7 +253,7 @@ def different_or_not(typ,df=data_types,message=False):
             print("The old parts and new parts of type %s have different distributions!"%typ)
     return diff
 
-def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,rate=repair_rate):
+def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=1000,rate=repair_rate):
 # MC is number iteration of Monte-Carlo
     
     FH_per_month = float(airlines[airlines['Company']==company]['FH per aircraft per month'])
@@ -318,7 +318,7 @@ def Estimated_Stock(company,typ,year,month,df=data,df_types=data_types,airlines=
     ci1,ci2=CI(y)
     return stock,y,ci1,ci2,total
     
-def Estimated_Stock_All_Companies(typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,message=False,rate=repair_rate):
+def Estimated_Stock_All_Companies(typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=1000,message=False,rate=repair_rate):
     s,y,ci1,ci2,t = 0,np.zeros(MC),np.zeros(2),np.zeros(2),0
     for company in list_company:
         mm,yyyy=airlines['End of contract'][company-1].month,airlines['End of contract'][company-1].year
@@ -335,7 +335,7 @@ def Estimated_Stock_All_Companies(typ,year,month,df=data,df_types=data_types,air
         t += t_
     return s,y,ci1,ci2,t
     
-def Time_series(typ,month,year,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,l=6):
+def Time_series(typ,month,year,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=1000,l=6):
     start = Begin.month+Begin.year*12
     end = month+year*12
     if end<=start:
@@ -402,7 +402,7 @@ def lifetime_simulation_list_diff(TSI_list, TSN_list,T,k_old,t_old,k_new,t_new,r
         series += serie
     return np.sort(series)
     
-def Estimated_time_company(company,typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,rate=repair_rate,tau=service_level):
+def Estimated_time_company(company,typ,year,month,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=1000,rate=repair_rate,tau=service_level):
     FH_per_month = float(airlines[airlines['Company']==company]['FH per aircraft per month'])
     End = dt.datetime(year, month, 1)
     FH_till_end = FH_per_month*((End.year-Begin.year)*12+End.month-Begin.month)
@@ -460,7 +460,7 @@ def Estimated_time_company(company,typ,year,month,df=data,df_types=data_types,ai
         times += [time]
     return times
 
-def Estimated_time(typ,N,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=200,rate=repair_rate,tau=service_level,message=False):
+def Estimated_time(typ,N,df=data,df_types=data_types,airlines=airlines,Begin=Today,MC=1000,rate=repair_rate,tau=service_level,message=False):
     P = int(N/tau)
     total_times = []
     t_max=[]
@@ -482,7 +482,8 @@ def Estimated_time(typ,N,df=data,df_types=data_types,airlines=airlines,Begin=Tod
     ac = np.array([1 if time_estimated[i]==tmax else 0 for i in range(MC)])
     num_afford = np.sum(ac)
     if num_afford > 0:
-        time_mean = np.median(time_estimated)
+        chance = num_afford/MC
+        time_mean = chance
         ci = (np.quantile(time_estimated,alpha),tmax)
     else:
         time_mean = np.mean(time_estimated)

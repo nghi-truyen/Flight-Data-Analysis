@@ -64,7 +64,7 @@ For evaluating the failure number as a function of time, we run `Evolution_Numbe
 
 `$ python Evolution_Number_Failures_Forecasting.py`
 
-For estimating of the moment that we can not immediately afford the need of customers, we run `Time_Forecasting.py` file:
+For estimating of the moment that we can not immediately afford the need of customers (called out-of-stock date), we run `Time_Forecasting.py` file:
 
 `$ python Time_Forecasting.py`
 
