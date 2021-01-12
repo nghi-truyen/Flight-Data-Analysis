@@ -5,6 +5,6 @@ Service level : 0.9
 Repair rate : 0.8
 
 OUTPUT
-Chance that we are not out of stock till the last end of contract in 2030-12-01 : 76.2%
+Chance that we are not out of stock till the last end of contract in 2030-12-01 : 74.6%
 Estimated date after which we have 95.0% chance of running out of stock : 2027-12-01
-Simulation time : 73.41 s
+Simulation time : 56.42 s

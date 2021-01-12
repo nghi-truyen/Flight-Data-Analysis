@@ -76,7 +76,7 @@ if __name__ == "__main__":
     while save not in ["y","n","yes","no"]:
         save = input("Do you want to save this result? (y/n)")
     if save in ["yes","y"]:
-        name = "Evolution_Number_Failures_at_"+str(DefFunc.Today).replace(" ","_")
+        name = "Evolution_Number_Failures_at_"+str(DefFunc.Today).replace(" ","_").replace(":","-").replace(".","-")
         filename = "%s.plt" % name
         filepath = os.path.join('./output', filename)
         if not os.path.exists('./output'):
