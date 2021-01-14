@@ -10,6 +10,7 @@ from lifelines.utils import find_best_parametric_model
 from lifelines.statistics import logrank_test
 import datetime as dt
 import time
+from datetime import timedelta
 
 ##############################################
 ##	INPUT PARAMETERS CALIBRATION        ##
@@ -492,6 +493,7 @@ def Estimated_time(typ,N,df=data,df_types=data_types,airlines=airlines,Begin=Tod
     
 def month_to_datetime(n):
     year=int(n/12)-1*(int(n)%12==0)
-    month=int(n-year*12)
-    day=int((n-year*12-month)*30)+1
-    return dt.date(year,month+12*(month==0),day)
+    m = n-year*12
+    m = m*365/360  # correction for the assumption of month = 30 days
+    delta=timedelta(days=m*30)
+    return dt.date(year-1,12,1)+delta
