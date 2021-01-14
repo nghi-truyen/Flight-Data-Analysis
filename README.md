@@ -56,7 +56,7 @@ The `input.txt` file is to calibrate the parameters of simulations:
 
 - `<Repair rate>`: percentage to which failed products are replaced by repaired products instead of replaced by new.
 
-**Attention:** The data set format (clone name, sheet name, etc.) should be similar to the format of the data on `./DataSet/` and the data file should be named without spaces.
+**Attention:** The data set format (clone name, sheet name, etc.) should be similar to the format of the data on `/DataSet/` and the data file should be named without spaces.
 
 For estimating of the number of failures at a determined time in the future, we run `Number_Failures_Forecasting.py` file with the command:
 
