@@ -10,6 +10,7 @@ from lifelines.utils import find_best_parametric_model
 from lifelines.statistics import logrank_test
 import datetime as dt
 import time
+from datetime import timedelta
 import os
 
 import DefFunc
