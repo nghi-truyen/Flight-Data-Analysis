@@ -10,23 +10,21 @@
 
 ### Task overview:
 
-We work on “Aircraft component reliability”, which is a vital contributing factor for dispatch reliability and aircraft system reliability. The main purpose of this project is to utilize some statistical models in order to predict future failure of aircraft parts, and then to optimize the stock management.
+This project deals with “Aircraft components reliability”, which is a key concept in the aeronautical industry. The main purpose of this project is to utilize some statistical models in order to predict future failure of aircraft parts, and then to optimize the management of spare parts stock.
 
-This project is carried out in favour of two Airbus services, the airline and the FHS (Flight Hour Services). At airlines, inoperative units on airplanes are removed if it fails and then are replaced with serviceable units that are provided by their site stock. The Airbus FHS here plays two important roles: providing serviceable units for the site stock and repairing products for their customers (the OEMs).
+This project is carried out in favour of Airbus Flight Hour Services (FHS), an Airbus department that provides stocking and repairing services to airline companies all around the world to minimize the time and cost of replacement of aircraft failed components. At airlines, inoperative units on airplanes are removed and then are replaced with serviceable units that are provided from their on-site stock. Airbus FHS here plays two important roles: providing serviceable units for the site stock and repairing unserviceable units at repair stations (the OEMs).
 
 <p align="center">
   <img src="https://github.com/nghitruyen/Flight_Data_Analysis/blob/main/images/AirbusFHS_activities.png" width="700" />
 </p>
 
-The challenges is to:
+The main objectives of the project is to:
 
-- reduce removals of parts,
+- define component lifetime forecast models and then by using these models,
     
-- reduce repair costs and,
+- determine if the current stock of spare parts is enough to full fill all the needs until the end of the contracts. If not, determine when the stock will be empty and will thus require to be replenished with new or repaired parts.
     
-- reduce investments (stock optimization).
-    
-In the new situation due to the pandemic, the airlines have less aircraft flying and more contracts ending. Consequently, they need to fine-tune their strategy “repair or stock unserviceable” to optimize the stock management. So the failure forecast of aircraft part is a significant underlying contributing factor in the proposals of such strategy.
+In the new situation due to the pandemic, the airlines have less aircraft flying and more contracts ending. Consequently, FHS need to fine-tune strategy “repair or stock unserviceable” to optimize the stock management. So the failure forecast of aircraft parts is a significant underlying contributing factor in the proposals of such strategy.
 
 ### Tutorial:
 
