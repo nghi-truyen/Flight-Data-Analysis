@@ -68,4 +68,4 @@ For estimating of the moment that we can not immediately afford the need of cust
 
 `$ python Time_Forecasting.py`
 
-Finally, the `/output` directory contains simulation output results.
+Finally, the `/output` directory contains simulation output results, which will be generated automatically when running our code.
