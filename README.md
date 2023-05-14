@@ -4,11 +4,7 @@
 <br />
 <br />
 
-# Flight Data Analysis - Airbus FHS
-
-## *Forecast of aircraft parts failures and optimization of spare parts stock management*
-
-### Task overview:
+### Overview:
 
 This project deals with “Aircraft components reliability”, which is a key concept in the aeronautical industry. The main purpose of this project is to utilize some statistical models in order to predict future failure of aircraft parts, and then to optimize the management of spare parts stock.
 
@@ -30,7 +26,9 @@ In the new situation due to the pandemic, the airlines have less aircraft flying
 
 We first download the project and then, the `lifelines` library in Python is required to execute the codes of project:
 
-`$ pip install lifelines`
+```bash
+pip install lifelines
+```
 
 The version number of each package is presented in `requirements.txt`.
 
@@ -58,14 +56,20 @@ The `input.txt` file is to calibrate the parameters of simulations:
 
 For estimating of the number of failures at a determined time in the future, we run `Number_Failures_Forecasting.py` file with the command:
 
-`$ python Number_Failures_Forecasting.py`
+```bash
+python Number_Failures_Forecasting.py
+```
 
 For evaluating the failure number as a function of time, we run `Evolution_Number_Failures_Forecasting.py` file:
 
-`$ python Evolution_Number_Failures_Forecasting.py`
+```bash
+python Evolution_Number_Failures_Forecasting.py
+```
 
 For estimating of the moment that we can not immediately afford the need of customers (called out-of-stock date), we run `Time_Forecasting.py` file:
 
-`$ python Time_Forecasting.py`
+```bash
+python Time_Forecasting.py
+```
 
 Finally, the `/output` directory contains simulation output results, which will be generated automatically when running our code.
